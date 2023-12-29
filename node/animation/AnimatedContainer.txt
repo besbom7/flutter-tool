@@ -1,0 +1,42 @@
+//AnimatedContainer จะเหมือน Container แต่จะมีคุณสมบัตที่เป็น Animation เพิ่มขึ้น
+
+class MyAnimatedContainer extends StatefulWidget {
+  const MyAnimatedContainer({super.key});
+
+  @override
+  State<MyAnimatedContainer> createState() => _MyAnimatedContainerState();
+}
+
+class _MyAnimatedContainerState extends State<MyAnimatedContainer> {
+  bool on = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          on = !on;
+        });
+      },
+      child: Scaffold(
+        body: AnimatedContainer(
+          //use animation
+          duration: Duration(milliseconds: 500),
+          //เวลาของ animation
+          alignment: on
+              ? Alignment(1, 1)
+              : Alignment(-1, -1), //set position child animation
+          curve: Curves.bounceOut, //รูปแบบของการเคลื่อนใหว
+          color: on ? Colors.red[500] : Colors.blue[500], //set color animation
+          width: on ? 200 : 300, //set size animation
+          height: on ? 200 : 300, //set size animation
+          child: Container(
+            width: 100,
+            height: 100,
+            color: Colors.deepPurple[200],
+          ),
+        ),
+      ),
+    );
+  }
+}

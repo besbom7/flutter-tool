@@ -1,0 +1,67 @@
+class MyHero extends StatefulWidget {
+  const MyHero({super.key});
+
+  @override
+  State<MyHero> createState() => _MyHeroState();
+}
+
+class _MyHeroState extends State<MyHero> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("MyHero")),
+      body: ListView.builder(
+        itemCount: 5,
+        itemBuilder: (BuildContext context, int index) {
+          return GestureDetector(
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return MyHeroDetail("assert/images/image.png", "ID_$index");
+              }));
+            },
+            child: Card(
+              child: ListTile(
+                title: Text("title $index"),
+                subtitle: Text("subTitle $index"),
+                leading: Hero(
+                    tag: "ID_$index",
+                    child: Image(image: AssetImage("assert/images/image.png"))),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class MyHeroDetail extends StatelessWidget {
+  var src;
+  var id_tag;
+  MyHeroDetail(this.src, this.id_tag);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Detail"),
+      ),
+      body: Column(children: [
+        Expanded(
+          child: Row(children: [
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                height: double.infinity,
+                child: Hero(tag: "${id_tag}", child: Image.asset("$src")),
+              ),
+            )
+          ]),
+        ),
+        Expanded(
+          child: Text(""),
+        )
+      ]),
+    );
+  }
+}

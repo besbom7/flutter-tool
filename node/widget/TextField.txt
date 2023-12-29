@@ -1,0 +1,58 @@
+class MyTextField extends StatefulWidget {
+  const MyTextField({super.key});
+
+  @override
+  State<MyTextField> createState() => _MyTextFieldState();
+}
+
+class _MyTextFieldState extends State<MyTextField> {
+  var _controller = TextEditingController();
+  var text = "";
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(title: Text("Text Field")),
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Center(child: Text("$text")),
+              ),
+              TextField(
+                controller: _controller,
+                onChanged: (value) {
+                  setState(() {
+                    text = _controller.text;
+                  });
+                },
+                decoration: InputDecoration(
+                    hintText: "detail",
+                    border: OutlineInputBorder(),
+                    suffixIcon: IconButton(
+                      icon: Icon(Icons.clear),
+                      onPressed: () {
+                        setState(() {
+                          _controller.clear();
+                        });
+                      },
+                    )),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              MaterialButton(
+                  color: Colors.deepOrange,
+                  onPressed: () {
+                    setState(() {
+                      text = _controller.text + " show Text";
+                    });
+                  },
+                  child: Text("Add show Text"))
+            ],
+          ),
+        ));
+  }
+}

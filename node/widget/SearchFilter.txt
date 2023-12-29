@@ -1,0 +1,61 @@
+class MySearchFilter extends StatefulWidget {
+  const MySearchFilter({super.key});
+
+  @override
+  State<MySearchFilter> createState() => _MySearchFilterState();
+}
+
+class _MySearchFilterState extends State<MySearchFilter> {
+  List<String> list = ["aaa", "ccs", "cca", "ddd", "eee"]; // list data
+  List<String> listMap = []; // list map
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    listMap = list; // set list = list map
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(13),
+          child: Column(children: [
+            TextField(
+              onChanged: (var value) {
+                // event on change in textField
+                listMap = list
+                    .where((v) => v.toLowerCase().contains(value.toLowerCase()))
+                    .toList(); // filter list from value
+                setState(() {}); //up date state
+              },
+              decoration: InputDecoration(
+                // inpute stype
+                border: OutlineInputBorder(),
+                hintText: "Search filter", //hint plachoder
+                prefixIcon: Icon(Icons.keyboard_alt), //icon left
+                suffixIcon: Icon(Icons.search), //icon right
+              ),
+            ),
+            SizedBox(height: 30),
+            Expanded(
+                child: Container(
+              child: ListView.builder(
+                // view list search
+                itemBuilder: (context, index) {
+                  var value = listMap[index];
+                  return Card(
+                    child: ListTile(title: Text(value)),
+                  );
+                },
+                itemCount: listMap.length,
+              ),
+            ))
+          ]),
+        ),
+      ),
+    );
+  }
+}

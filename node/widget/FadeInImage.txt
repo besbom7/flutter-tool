@@ -1,0 +1,35 @@
+
+
+
+
+class MyFadeInImage extends StatelessWidget {
+  const MyFadeInImage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(title: Text("Fade in image")),
+        body: Column(
+          children: [
+            Expanded(
+              child: FadeInImage(
+                fit: BoxFit.fill,
+                placeholder: AssetImage(
+                    "assert/images/cupertino_activity_indicator.gif"),
+                image: NetworkImage(
+                    'https://images.unsplash.com/photo-1680363470732-4760c2a2a777?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80'),
+              ),
+            ),
+            Expanded(
+              child: FadeInImage(
+                fit: BoxFit.cover,
+                placeholder: AssetImage(
+                    "assert/images/cupertino_activity_indicator.gif"),
+                image: NetworkImage(
+                    'https://images.unsplash.com/photo-1680530870575-6446859ec71a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80'),
+              ),
+            ),
+          ],
+        ));
+  }
+}

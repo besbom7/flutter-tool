@@ -1,0 +1,82 @@
+class MyAnimationIcon extends StatefulWidget {
+  const MyAnimationIcon({super.key});
+
+  @override
+  State<MyAnimationIcon> createState() => _MyAnimationIconState();
+}
+
+class _MyAnimationIconState extends State<MyAnimationIcon>
+    with SingleTickerProviderStateMixin {
+  //ถ้าใช้ Animation ต้องใช้ with SingleTickerProviderStateMixin
+
+  late AnimationController _animationController; //สร้าง Controller Animation
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+        vsync: this,
+        duration: Duration(
+            seconds:
+                1)); //กำหนด ค่าเริ่มต้นให้กับ Animation Controller ต้องกำหนดบังคับ
+  }
+
+  bool onIcon = false; //สถานะ animation icon
+
+  toggleIcon() {
+    if (onIcon) {
+      //check status icon open
+      _animationController
+          .reverse(); //กำหนดให้ controller animaion reverse หรือ ถอยหลัง icon
+      onIcon = false; // set status icon
+    } else {
+      _animationController
+          .forward(); //กำหนดให้ controller animaion forward หรือ เดินหน้า icon
+      onIcon = true; // set status icon
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: Center(
+      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        GestureDetector(
+          onTap: () {
+            toggleIcon(); //สลับ Icon
+          },
+          child: AnimatedIcon(
+              // Main
+              //สร้าง Widget Animaion Icon
+              icon:
+                  AnimatedIcons.play_pause, //กำหนกใช้ Animation Icon play_pause
+              progress: _animationController, //กำหนด Controller
+              size: 150),
+        ),
+        GestureDetector(
+          onTap: () {
+            toggleIcon(); //สลับ Icon
+          },
+          child: AnimatedIcon(
+              // Main
+              //สร้าง Widget Animaion Icon
+              icon:
+                  AnimatedIcons.arrow_menu, //กำหนกใช้ Animation Icon arrow_menu
+              progress: _animationController, //กำหนด Controller
+              size: 150),
+        ),
+        GestureDetector(
+          onTap: () {
+            toggleIcon(); //สลับ Icon
+          },
+          child: AnimatedIcon(
+              // Main
+              //สร้าง Widget Animaion Icon
+              icon: AnimatedIcons.list_view, //กำหนกใช้ Animation Icon list_view
+              progress: _animationController, //กำหนด Controller
+              size: 150),
+        )
+      ]),
+    ));
+  }
+}

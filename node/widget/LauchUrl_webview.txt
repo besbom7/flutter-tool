@@ -1,0 +1,27 @@
+//01. install pub dev (flutter pub add url_launcher);
+class MyLauchUrl extends StatefulWidget {
+  const MyLauchUrl({super.key});
+
+  @override
+  State<MyLauchUrl> createState() => _MyLauchUrlState();
+}
+
+
+class _MyLauchUrlState extends State<MyLauchUrl> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("LauchUrl")),
+      body: Center(
+        child: MaterialButton(
+          onPressed: () {
+            launchUrl(Uri.parse( //open url web view
+                "https://demo.compupower-home.com:8082/computest/#/login/SQL?menucode=mwes,mwpn,mwrc,mwhd,mtba,hr6"));
+          },
+          child: Text("open url"),
+          color: Colors.blue,
+        ),
+      ),
+    );
+  }
+}

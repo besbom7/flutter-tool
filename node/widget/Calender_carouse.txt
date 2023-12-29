@@ -1,0 +1,246 @@
+import 'package:flutter/material.dart';
+
+import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart'
+    show CalendarCarousel;
+import 'package:flutter_calendar_carousel/classes/event.dart';
+import 'package:flutter_calendar_carousel/classes/event_list.dart';
+import 'package:intl/intl.dart' show DateFormat;
+import 'package:flutter_localizations/flutter_localizations.dart';
+
+//01.install ( flutter_calendar_carousel )
+
+void main() => runApp(new MyApp());
+
+class MyApp extends StatelessWidget {
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) {
+    return new MaterialApp(
+      title: 'dooboolab flutter calendar',
+      theme: new ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: new MyHomePage(title: 'Flutter Calendar Carousel Example'),
+      localizationsDelegates: GlobalMaterialLocalizations.delegates,
+      supportedLocales: const [
+        Locale('th', ''),
+      ],
+    );
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+  MyHomePage({Key? key, required this.title}) : super(key: key);
+  final String title;
+
+  @override
+  _MyHomePageState createState() => new _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  //set current date
+  DateTime _currentDate = DateTime.now();
+  //current month text for show
+  String _currentMonth = DateFormat.yMMM().format(DateTime.now());
+  //date time selected
+  DateTime _targetDateTime = DateTime.now();
+
+  //create event icon in date
+  static Widget _eventIcon = new Container(
+    child: Stack(
+      alignment: Alignment(0, 1.5),
+      children: [
+        Container(
+          width: 15,
+          height: 15,
+          child: FittedBox(
+            child: Icon(
+              Icons.check_circle_rounded,
+              color: Colors.green,
+            ),
+          ),
+        )
+      ],
+    ),
+  );
+
+  //create Event in date
+  EventList<Event> _markedDateMap = new EventList<Event>(
+    events: {
+      new DateTime(2023, 7, 12): [
+        new Event(
+          date: new DateTime(2023, 7, 12),
+          title: 'Event 3',
+          icon: _eventIcon,
+        ),
+      ]
+    },
+  );
+
+  @override
+  void initState() {
+    //add Event in date
+    _markedDateMap.add(
+        new DateTime(2023, 7, 11),
+        new Event(
+          date: new DateTime(2023, 7, 11),
+          title: 'Event 5',
+          icon: _eventIcon,
+        ));
+
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    //create Calender Carouse
+    final _calendarCarouselNoHeader = CalendarCarousel<Event>(
+      todayBorderColor: Colors.green,
+      //Event เมื่อ เลือกวันที่
+      onDayPressed: (date, events) {
+        print('selected date $date');
+        this.setState(() => _currentDate = date);
+        events.forEach((event) => print(event.title));
+      },
+      //set ให้ขอบของวันที่เป็นวงกลม
+      daysHaveCircularBorder: true,
+      //set ให้แสดงวันที่เฉพาะเดือนปัจุบัน
+      showOnlyCurrentMonthDate: false,
+      //set แสดงสีของวันหยุด ส.
+      weekendTextStyle: TextStyle(
+        color: Colors.red,
+      ),
+      //set สีของ border
+      thisMonthDayBorderColor: Colors.grey,
+      //set ให้แสดงแบบเป็น week
+      weekFormat: false,
+      //กำหนก list Event ให้กับ Calender
+      markedDatesMap: _markedDateMap,
+      //กำหนดความสูงของ Calender
+      height: 400,
+      //กำหนดภาษาของ Calender
+      locale: "th",
+      //กำหนด date selected
+      selectedDateTime: _currentDate,
+      //กำหนด target calender หน้า ช่วงการแสดงหน้า calender
+      targetDateTime: _targetDateTime,
+      customGridViewPhysics: NeverScrollableScrollPhysics(),
+      //กำหนดขอบสีของวันที่ ที่มีการใช้ icon event
+      markedDateCustomShapeBorder:
+          CircleBorder(side: BorderSide(color: Colors.green)),
+      //กำหนด text style ของวันที่ ที่มีการใช้ icon event
+      markedDateCustomTextStyle: TextStyle(
+        fontSize: 18,
+        color: Colors.green,
+      ),
+      //set show header
+      showHeader: true,
+      //กำหนดข้อความบน header
+      // headerText: "TEST",
+      //กำหนด text style ของ current date
+      todayTextStyle: TextStyle(
+        color: Colors.blueGrey,
+      ),
+      //กำหนดให้ calener show icons
+      markedDateShowIcon: true,
+      //กำหนดจำนวนสูงสุดของ icon ที่สามารถแสดงได้
+      markedDateIconMaxShown: 2,
+      //event ที่เกิดจากการ builder event icon
+      markedDateIconBuilder: (event) {
+        return event.icon;
+      },
+      // markedDateMoreShowTotal: true,
+      //กำหนดสีของ button ที่เป็นวันที่ปัจุบัน
+      todayButtonColor: Color.fromARGB(255, 247, 239, 161),
+      //กำหนด text style ของวันที่ ที่เลือกใว้
+      selectedDayTextStyle: TextStyle(
+        color: Color.fromARGB(255, 0, 59, 16),
+      ),
+      //กำหนด min date
+      minSelectedDate: _currentDate.subtract(Duration(days: 360)),
+      //กำหนด max date
+      maxSelectedDate: _currentDate.add(Duration(days: 360)),
+      //กำหนด text style ของวันที่ ก่อนหน้า
+      prevDaysTextStyle: TextStyle(
+        fontSize: 16,
+        color: Color.fromARGB(255, 0, 255, 51),
+      ),
+      //กำหนด text style ของวันที่ ที่เกิดช่วง disable ที่ไม่สามารถเลือกได้
+      inactiveDaysTextStyle: TextStyle(
+        color: Color.fromARGB(255, 4, 175, 255),
+        fontSize: 16,
+      ),
+      //Event ที่เกิดจากการกด ย้ายช่วงเดือน
+      onCalendarChanged: (DateTime date) {
+        this.setState(() {
+          _targetDateTime = date;
+          print('change date $date');
+          _currentMonth = DateFormat.yMMM().format(_targetDateTime);
+        });
+      },
+      //event ที่เกิดจากการกดวันที่ค้างใว้
+      onDayLongPressed: (DateTime date) {
+        print('long pressed date $date');
+      },
+    );
+
+    return new Scaffold(
+        appBar: new AppBar(
+          title: new Text(widget.title),
+        ),
+        body: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                margin: EdgeInsets.only(
+                  top: 30.0,
+                  bottom: 16.0,
+                  left: 16.0,
+                  right: 16.0,
+                ),
+                child: new Row(
+                  children: <Widget>[
+                    Expanded(
+                        child: Text(
+                      _currentMonth,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 24.0,
+                      ),
+                    )),
+                    TextButton(
+                      child: Text('PREV'),
+                      onPressed: () {
+                        setState(() {
+                          _targetDateTime = DateTime(
+                              _targetDateTime.year, _targetDateTime.month - 1);
+                          _currentMonth =
+                              DateFormat.yMMM().format(_targetDateTime);
+                        });
+                      },
+                    ),
+                    TextButton(
+                      child: Text('NEXT'),
+                      onPressed: () {
+                        setState(() {
+                          _targetDateTime = DateTime(
+                              _targetDateTime.year, _targetDateTime.month + 1);
+                          _currentMonth =
+                              DateFormat.yMMM().format(_targetDateTime);
+                        });
+                      },
+                    )
+                  ],
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 16.0),
+                child: _calendarCarouselNoHeader,
+              ), //
+            ],
+          ),
+        ));
+  }
+}

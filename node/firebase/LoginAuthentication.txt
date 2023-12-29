@@ -1,0 +1,239 @@
+import 'dart:math';
+
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import './model/test.dart';
+import './model/fileClasstest.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+/*
+01.Login fire base 
+02.go to console in fire base
+03.create project fire base
+04.register application android and ios or web 
+05.create FireStore Database and create Realtime Database
+06.add pubspec ( firebase_core , cloud_firestore )
+07.add pubspec ( firebase_auth )
+*/
+
+void main() async {
+  // //08. initial Firebase ดูมาจาก web (https://firebase.flutter.dev/docs/overview/)
+  WidgetsFlutterBinding.ensureInitialized(); //initial Firebase
+  await Firebase.initializeApp(); //initial Firebase
+  // ClassTest classtest = ClassTest();
+  // await classtest.TEST();
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: "test",
+      home: MyAuthentication(),
+    );
+  }
+}
+
+class MyAuthentication extends StatefulWidget {
+  const MyAuthentication({super.key});
+
+  @override
+  State<MyAuthentication> createState() => _MyAuthenticationState();
+}
+
+class _MyAuthenticationState extends State<MyAuthentication> {
+  //ไม่ได้ทำแบบใช้ Form Validate
+
+  final auth = FirebaseAuth
+      .instance; //get instance เพื่อใช้สำหรับ logout หรือ get detail
+
+  var emailController = TextEditingController(text: ""); //input email
+  var passwordController = TextEditingController(text: ""); //input password
+  var showPassword = true;
+  var ID = "";
+  var EMAIL = "";
+  var refreshToken = "";
+
+  void Register() async {
+    //Register Authentication
+    try {
+      await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+              // use Register Authentication
+              email: emailController.text,
+              password: passwordController.text)
+          .then((value) {
+        // Register success
+        showTaost("Register success");
+      });
+    } on FirebaseException catch (e) {
+      // กรณี Register ไม่สำเร็จ
+      showTaost(e.message);
+      print(e.code);
+    }
+  }
+
+  void Login() async {
+    //Login Authentication
+    try {
+      await FirebaseAuth.instance
+          .signInWithEmailAndPassword(
+              // use Login Authentication
+              email: emailController.text,
+              password: passwordController.text)
+          .then((value) {
+        //Login success
+        setState(() {
+          EMAIL = auth.currentUser!.email!; //get email login from auth
+          ID = auth.currentUser!.uid!; //get uid login from auth
+        });
+
+        showTaost("Login success");
+      });
+    } on FirebaseAuthException catch (e) {
+      // กรณี Login ไม่สำเร็จ
+      showTaost(e.message);
+      print(e.code);
+    }
+  }
+
+  void LogOut() async {
+    // sing Out Authentication
+    auth.signOut().then((value) {
+      // use Sing out
+      showTaost("LogOut success"); // sing out success
+      setState(() {
+        EMAIL = "";
+        ID = "";
+      });
+    });
+  }
+
+  void showTaost(var message) {
+    Fluttertoast.showToast(
+        msg: message,
+        gravity: ToastGravity.TOP,
+        backgroundColor: Colors.black.withAlpha(50));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        backgroundColor: Colors.green[200],
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(height: 40),
+                  Text(
+                    "Register and Login Exemple",
+                    style: TextStyle(
+                      fontSize: 27,
+                      color: Colors.white,
+                    ),
+                  ),
+                  SizedBox(height: 35),
+                  Card(
+                    child: Container(
+                        padding: EdgeInsets.all(20),
+                        child: Column(
+                          children: [
+                            TextFormField(
+                              controller: emailController,
+                              decoration: InputDecoration(
+                                  label: Text("Email"),
+                                  icon: Icon(Icons.email)),
+                            ),
+                            SizedBox(height: 20),
+                            TextFormField(
+                              obscureText: showPassword,
+                              controller: passwordController,
+                              decoration: InputDecoration(
+                                  label: Text("Password"),
+                                  icon: Icon(Icons.lock),
+                                  suffixIcon: GestureDetector(
+                                    child: Icon(Icons.visibility),
+                                    onTap: () {
+                                      setState(() {
+                                        showPassword = !showPassword;
+                                      });
+                                    },
+                                  )),
+                            ),
+                          ],
+                        )),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      MaterialButton(
+                        color: Colors.blue,
+                        onPressed: () {
+                          Register();
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            "Register",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 20),
+                      MaterialButton(
+                        color: Colors.blue,
+                        onPressed: () {
+                          Login();
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            "Login",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 30),
+                  Container(
+                    height: 200,
+                    width: double.infinity,
+                    padding: EdgeInsets.all(10),
+                    child: Card(
+                        child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("ID : $ID"),
+                        SizedBox(height: 15),
+                        Text("Email : $EMAIL"),
+                        SizedBox(height: 15),
+                        MaterialButton(
+                          color: Colors.blue,
+                          onPressed: () {
+                            LogOut();
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text("Logout",
+                                style: TextStyle(color: Colors.white)),
+                          ),
+                        )
+                      ],
+                    )),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ));
+  }
+}

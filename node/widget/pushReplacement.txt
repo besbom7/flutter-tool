@@ -1,0 +1,74 @@
+
+//use pushReplacement ใช้เพื่อเวลาเปิดหน้าให้แล้วไม่ให้เก็บ stack ของหน้าจอ หน้าจอจะไม่ซ้อนกันจึงไม่มีปุ่มย่อนกลับบน Appbar
+
+class MypushReplacement extends StatelessWidget {
+  const MypushReplacement({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("My pushReplacement")),
+      body: Center(
+        child: MaterialButton(
+          onPressed: () {
+            Navigator.pushReplacement(
+                context, //use pushReplacement ใช้เพื่อเวลาเปิดหน้าให้แล้วไม่ให้เก็บ stack ของหน้าจอ หน้าจอจะไม่ซ้อนกันจึงไม่มีปุ่มย่อนกลับบน Appbar
+                MaterialPageRoute(builder: (context) {
+              return MyPahg1();
+            }));
+          },
+          color: Colors.green,
+          child: Text("Next Page"),
+        ),
+      ),
+    );
+  }
+}
+
+class MyPahg1 extends StatelessWidget {
+  const MyPahg1({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Page1")),
+      body: Center(
+        child: MaterialButton(
+          onPressed: () {
+            Navigator.pushReplacement(
+                context, //use pushReplacement ใช้เพื่อเวลาเปิดหน้าให้แล้วไม่ให้เก็บ stack ของหน้าจอ หน้าจอจะไม่ซ้อนกันจึงไม่มีปุ่มย่อนกลับบน Appbar
+                MaterialPageRoute(builder: (context) {
+              return MyPage2();
+            }));
+          },
+          color: Colors.green,
+          child: Text("Next Page"),
+        ),
+      ),
+    );
+  }
+}
+
+class MyPage2 extends StatelessWidget {
+  const MyPage2({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Page2")),
+      body: Center(
+        child: MaterialButton(
+          onPressed: () {
+            Navigator.pushReplacement(
+                context, //use pushReplacement ใช้เพื่อเวลาเปิดหน้าให้แล้วไม่ให้เก็บ stack ของหน้าจอ หน้าจอจะไม่ซ้อนกันจึงไม่มีปุ่มย่อนกลับบน Appbar
+                MaterialPageRoute(builder: (context) {
+              return MypushReplacement();
+            }));
+          },
+          color: Colors.green,
+          child: Text("Next Page"),
+        ),
+      ),
+    );
+  }
+}

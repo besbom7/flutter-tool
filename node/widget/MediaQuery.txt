@@ -1,0 +1,45 @@
+//MediaQuery ใช้สำหรับ get ขนาดหน้าจอ
+
+class MyMediaQuery extends StatefulWidget {
+  const MyMediaQuery({super.key});
+
+  @override
+  State<MyMediaQuery> createState() => _MyMediaQueryState();
+}
+
+class _MyMediaQueryState extends State<MyMediaQuery> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("my media query")),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Center(
+            child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              "height : ${MediaQuery.of(context).size.height}", //ขนาด heigth ของหน้าจอ
+              style: TextStyle(
+                  fontSize: 30, fontWeight: FontWeight.bold, color: Colors.red),
+            ),
+            Text(
+              "width : ${MediaQuery.of(context).size.width}", //ขนาด width ของหน้าจอ
+              style: TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.green),
+            ),
+            Text(
+              "aspectRatio : ${MediaQuery.of(context).size.aspectRatio}", //ขนาด อัตราส่วน ของหน้าจอ
+              style: TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blue),
+            ),
+          ],
+        )),
+      ),
+    );
+  }
+}

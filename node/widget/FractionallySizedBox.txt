@@ -1,0 +1,77 @@
+
+//FractionallySizedBox ใช้สำหรับกำหนดขนาดของลูกให้ยาวตามขนาด % ในพื้นที่ที่เหลือ และใช้เว้นระยะตาม % คล้ายกับการใช้ 100% ใน css
+
+class MyFractionallySizedBox extends StatelessWidget {
+  const MyFractionallySizedBox({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              child: Container(
+                // container parent
+                width: double.infinity, //width max
+                height: double.infinity, //width max
+                color: Colors.blue[100],
+                child: FractionallySizedBox(
+                  //use FractionallySizedBox ใช้สำหรับกำหนดขนาดของลูกให้ยาวตามขนาด % ในพื้นที่ที่เหลือ คล้ายกับการใช้ 100% ใน css
+                  widthFactor: 0.8, //กำหนดตวามยาว 80%
+                  heightFactor: 0.7, //กำหนดตวามสูง 70%
+                  child: Container(
+                    color: Colors.green,
+                    child: Center(
+                        child: Text("width 80% and height 70% of Container")),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 20),
+            Expanded(
+              child: Container(
+                //container parent
+                width: double.infinity,
+                height: double.infinity,
+                color: Colors.yellow[200],
+                child: Column(children: [
+                  Container(height: 50, color: Colors.red),
+                  Flexible(
+                    //เคสนี้ใช้เพื่อให้เว้นระยะห่างความสูงเป็น % กรณีนี้ต้องครอบ FractionallySizedBox ด้วย Flexible
+                    child: FractionallySizedBox(
+                      //use FractionallySizedBox ใช้สำหรับกำหนดขนาดของลูกให้ยาวตามขนาด % ในพื้นที่ที่เหลือ คล้ายกับการใช้ 100% ใน css
+                      heightFactor: 0.8, //set height 80%
+                      child: Center(child: Text("heigth 80% of container")),
+                    ),
+                  ),
+                  Container(height: 50, color: Colors.orange)
+                ]),
+              ),
+            ),
+            SizedBox(height: 20),
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                height: double.infinity,
+                color: Colors.brown[100],
+                child: FractionallySizedBox(
+                  //use FractionallySizedBox ใช้สำหรับกำหนดขนาดของลูกให้ยาวตามขนาด % ในพื้นที่ที่เหลือ คล้ายกับการใช้ 100% ใน css
+                  widthFactor: 0.3, //set width 30%
+                  heightFactor: 0.3, //set height 30%
+                  alignment: Alignment
+                      .bottomRight, //เคานี้ใช้ Alignment ช่วยในการจัดตำแหน่ง
+                  child: Container(
+                    color: Colors.blue,
+                    child: Text(
+                        "width , height 30% of container and set aligment position"),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

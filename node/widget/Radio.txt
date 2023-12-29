@@ -1,0 +1,78 @@
+class MyRadio extends StatefulWidget {
+  const MyRadio({super.key});
+
+  @override
+  State<MyRadio> createState() => _MyRadioState();
+}
+
+class _MyRadioState extends State<MyRadio> {
+  var group_radio = 1;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Radio")),
+      body: ListView(
+        children: [
+          ListTile(
+            title: Text("ก."),
+            leading: Radio(
+              groupValue: group_radio,
+              value: 1,
+              onChanged: (var value) {
+                setState(() {
+                  group_radio = value!;
+                });
+              },
+            ),
+          ),
+          ListTile(
+            title: Text("ข."),
+            leading: Radio(
+              groupValue: group_radio,
+              value: 2,
+              onChanged: (var value) {
+                setState(() {
+                  group_radio = value!;
+                });
+              },
+            ),
+          ),
+          ListTile(
+            title: Text("ค."),
+            leading: Radio(
+              groupValue: group_radio,
+              value: 3,
+              onChanged: (var value) {
+                setState(() {
+                  group_radio = value!;
+                });
+              },
+            ),
+          ),
+          ListTile(
+            title: Text("ง."),
+            leading: Radio(
+              groupValue: group_radio,
+              value: 4,
+              onChanged: (var value) {
+                setState(() {
+                  group_radio = value!;
+                });
+              },
+            ),
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Center(
+            child: Text(
+              "value = $group_radio",
+              style: TextStyle(fontSize: 35, color: Colors.green),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}

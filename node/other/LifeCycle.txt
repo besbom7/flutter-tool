@@ -1,0 +1,146 @@
+
+/* 
+Life Cycle Flutter
+ -createState ถูกเรียกเมื่อสร้าง state
+ -initState ถูกเรียกเมื่อสร้าง state แล้ว จะถูกเรียกแค่ครั้งเดียว
+ -didChangeDependencies ถูกหลังจาก initState และอาจจะถูกเรียกหลายครั้ง (ไม่ค่อยสำคัญเท่าไหร่)
+ -didUpdateWidget จะถูกเรียกเมือมีการเปลี่ยนแปลง widget จาก constructor หรือถูกเปลี่ยนแปลงจาก parent
+ -setState ถูกเรียกเมื่อมีการ อัพเดต widget
+ -deactivate ถูกเรียกเมื่อมีการปิดใช้งาน หรือการปิดใช้งานชั่วคราว เช่นการใช้ Navigator.pup(context) (ไม่ค่อยสำคัญเท่าไหร่)
+ -dispose ถูกเรียกหลังจาก deactivate และเมื่อมีการปิดใช้งาน หรือการปิดใช้งานชั่วคราว เช่นการใช้ Navigator.pup(context)
+*/
+
+class MyLifeCycle extends StatefulWidget {
+  const MyLifeCycle({super.key});
+
+  @override
+  State<MyLifeCycle> createState() {
+    print("create State");
+    return _MyLifeCycleState();
+  }
+}
+
+class _MyLifeCycleState extends State<MyLifeCycle> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print("init State");
+  }
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    print("didChangeDependencies");
+  }
+
+  var text = "1";
+
+  @override
+  Widget build(BuildContext context) {
+    print("build init");
+    return Scaffold(
+      body: Center(
+        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          DidUpdateWidget(title: text),
+          MaterialButton(
+            padding: EdgeInsets.all(15),
+            onPressed: () {
+              setState(() {
+                if (text == '1') {
+                  text = "2";
+                } else {
+                  text = "1";
+                }
+              });
+            },
+            child: Text("click use didUpdateWidget"),
+            color: Colors.green[300],
+          ),
+          SizedBox(
+            height: 30,
+          ),
+          MaterialButton(
+            padding: EdgeInsets.all(15),
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                return PageTest();
+              }));
+            },
+            child: Text("Next page"),
+            color: Colors.blue[300],
+          ),
+        ]),
+      ),
+    );
+  }
+}
+
+class DidUpdateWidget extends StatefulWidget {
+  var title = "";
+  DidUpdateWidget({var title}) {
+    this.title = title;
+  }
+
+  @override
+  State<DidUpdateWidget> createState() => _DidUpdateWidgetState();
+}
+
+class _DidUpdateWidgetState extends State<DidUpdateWidget> {
+  @override
+  void didUpdateWidget(covariant DidUpdateWidget oldWidget) {
+    // TODO: implement didUpdateWidget
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.title != widget.title) {
+      print("didUpdateWidget = widget change");
+    } else {
+      print("didUpdateWidget = widget not change");
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      "${widget.title}",
+      style: TextStyle(fontSize: 40, color: Colors.orange),
+    );
+  }
+}
+
+class PageTest extends StatefulWidget {
+  const PageTest({super.key});
+
+  @override
+  State<PageTest> createState() => _PageTestState();
+}
+
+class _PageTestState extends State<PageTest> {
+  @override
+  void deactivate() {
+    // TODO: implement deactivate
+    super.deactivate();
+    print("deactivate");
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    print("dispose");
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+          child: MaterialButton(
+        color: Colors.red[600],
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        child: Text("close page"),
+      )),
+    );
+  }
+}

@@ -1,0 +1,81 @@
+import 'package:flutter/material.dart';
+import 'package:nice_buttons/nice_buttons.dart';
+
+class PageDetail extends StatelessWidget {
+  final controllerTitle = TextEditingController();
+  final controllerAmount = TextEditingController();
+  final formKey = GlobalKey<FormState>();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Page Detail")),
+      body: Form(
+        key: formKey,
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            children: [
+              CircleAvatar(
+                radius: 70,
+                backgroundColor: Colors.brown.shade800,
+                child: Text('AH1'),
+              ),
+              TextFormField(
+                decoration: InputDecoration(label: Text("UserName")),
+                autofocus: true,
+                controller: controllerTitle,
+                validator: (var str) {
+                  if (str.toString().isEmpty) {
+                    return "title is null";
+                  }
+                  return null;
+                },
+              ),
+              Container(
+                margin: EdgeInsets.fromLTRB(0, 15, 0, 0),
+                child: TextFormField(
+                  decoration: InputDecoration(
+                    label: Text('password'),
+                  ),
+                  keyboardType: TextInputType.number,
+                  controller: controllerAmount,
+                  validator: (var str) {
+                    if (str.toString().isEmpty) {
+                      return "amount is null";
+                    }
+
+                    if (double.parse(str.toString()) < 0) {
+                      return "amount < 0";
+                    }
+
+                    return null;
+                  },
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
+                child: NiceButtons(
+                  stretch: false,
+                  startColor: Color.fromARGB(255, 0, 83, 156),
+                  endColor: Color.fromARGB(255, 0, 19, 230),
+                  borderRadius: 30,
+                  gradientOrientation: GradientOrientation.Horizontal,
+                  onTap: (finish) {
+                    if (formKey.currentState!.validate()) {
+                      Navigator.pop(context);
+                    }
+                  },
+                  child: Text(
+                    'Submit',
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

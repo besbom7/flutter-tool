@@ -1,0 +1,42 @@
+//01.install pub dev (flutter pub add animations)
+
+class MyOpenContainer extends StatefulWidget {
+  const MyOpenContainer({super.key});
+
+  @override
+  State<MyOpenContainer> createState() => _MyOpenContainerState();
+}
+
+class _MyOpenContainerState extends State<MyOpenContainer> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(title: Text("Open container")),
+        body: Center(
+          //create OpenContainer Animation popup
+            child: OpenContainer(
+          transitionDuration: Duration(milliseconds: 700), //set transection delay 700 milliseconds
+          //action open popup auto 
+          closedBuilder: (context, action) {
+            return Text("click me");
+          },
+          //builder page popup
+          openBuilder: (context, action) {
+            return Scaffold(
+              body: Container(
+                color: Colors.blue[100],
+                child: Center(
+                  child: MaterialButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text("closed"),
+                    color: Colors.blue,
+                  ),
+                ),
+              ),
+            );
+          },
+        )));
+  }
+}

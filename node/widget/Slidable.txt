@@ -1,0 +1,98 @@
+//01. add pugin flutter_slidable: ^3.0.0 in pubspec.yaml
+//02. import 'package:flutter_slidable/flutter_slidable.dart';
+
+class MySlidable extends StatefulWidget {
+  const MySlidable({super.key});
+
+  @override
+  State<MySlidable> createState() => _MySlidableState();
+}
+
+class _MySlidableState extends State<MySlidable> {
+  void _showDialog(String message, BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(message),
+            actions: [
+              TextButton(
+                child: Text("ok"),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              )
+            ],
+          );
+        });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Slidable(
+          //คลุมด้วย Slidable ถ้าต้องการใช้ Sladble
+          startActionPane: ActionPane(
+            // motion Action button ฝั่งซ้าย
+            motion: ScrollMotion(), //รูปแบบการเลื่อน animation
+            children: [
+              SlidableAction(
+                // ปุ่ม Action
+                onPressed: (_context) {
+                  _showDialog("call", context);
+                },
+                // flex: 1,
+                icon: Icons.call, //icon
+                label: "Call",
+                backgroundColor: Colors.blue, //สี พื้นหลัง
+                foregroundColor: Colors.white, //สี icon
+              ),
+              SlidableAction(
+                // ปุ่ม Action
+                onPressed: (_context) {
+                  _showDialog("list", context);
+                },
+                // flex: 1,
+                icon: Icons.list,
+                backgroundColor: Colors.red,
+                label: "List",
+              )
+            ],
+          ),
+          endActionPane: ActionPane(
+            // motion Action button ฝั่งขวา
+            motion: StretchMotion(), //รูปแบบการเลื่อน animation
+            children: [
+              SlidableAction(
+                // ปุ่ม Action
+                onPressed: (_context) {
+                  _showDialog("app_blocking", context);
+                },
+                backgroundColor: Colors.pinkAccent,
+                label: "block",
+                icon: Icons.app_blocking,
+              ),
+              SlidableAction(
+                // ปุ่ม Action
+                onPressed: (_context) {
+                  _showDialog("delete", context);
+                },
+                icon: Icons.delete,
+                backgroundColor: Colors.yellowAccent,
+              )
+            ],
+          ),
+          child: Container(
+            color: Colors.orange[200],
+            child: ListTile(
+              leading: Icon(Icons.phonelink_erase_rounded),
+              title: Text("title"),
+              subtitle: Text("subtitle"),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

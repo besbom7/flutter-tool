@@ -1,0 +1,58 @@
+//ตัวอย่างการใช้งาน การส่ง function เพื่อให้อีก widget มาเรียกใช้งาน
+
+class MyFunction extends StatelessWidget {
+  const MyFunction({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    void _showDialog(String message) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text("$message"),
+              actions: [
+                MaterialButton(
+                  color: Colors.green,
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text("OK"),
+                )
+              ],
+            );
+          });
+    }
+
+    return Scaffold(
+      appBar: AppBar(title: Text("My function")),
+      body: Center(
+        child: MyButton(
+          function: _showDialog,
+        ),
+      ),
+    );
+  }
+}
+
+class MyButton extends StatelessWidget {
+  var function;
+  MyButton({required this.function});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialButton(
+      onPressed: () {
+        function("Hello i am MyButton");
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Text(
+          "คลิ้กเพื่อใช้ function อีก widget",
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
+      color: Colors.green,
+    );
+  }
+}

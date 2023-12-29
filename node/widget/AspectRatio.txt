@@ -1,0 +1,37 @@
+
+//AspectRatio คือ widget ที่เป็นการบอก อตราส่วนของขนาดตามขนาดของ parent คือ aspectRatio: 10 / 1  กว้าง 10 และ สูง 1 ของ 10
+
+class MyAspectRatio extends StatelessWidget {
+  const MyAspectRatio({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: Container(
+      alignment: Alignment.center,
+      color: Colors.amber,
+      width: double.infinity,
+      height: 500,
+      child: AspectRatio(
+        aspectRatio: 10 / 1,
+        child: Container(
+          color: Colors.blueAccent,
+        ),
+      ),
+    ));
+  }
+}
+
+class MyAsPectRatio2 extends StatelessWidget {
+  const MyAsPectRatio2({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: AspectRatio(
+        aspectRatio: 3 / 1,
+        child: Container(color: Colors.red),
+      ),
+    );
+  }
+}

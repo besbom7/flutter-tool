@@ -1,0 +1,82 @@
+import 'dart:math';
+import 'dart:ui';
+
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import './model/test.dart';
+import './model/fileClasstest.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+/*
+01.Login fire base 
+02.go to console in fire base
+03.create project fire base
+04.register application android and ios or web 
+05.create FireStore Database and create Realtime Database
+06.add pubspec ( firebase_core , cloud_firestore )
+07.add pubspec ( firebase_auth )
+*/
+
+void main() async {
+  // //08. initial Firebase ดูมาจาก web (https://firebase.flutter.dev/docs/overview/)
+  WidgetsFlutterBinding.ensureInitialized(); //initial Firebase
+  await Firebase.initializeApp(); //initial Firebase
+  // ClassTest classtest = ClassTest();
+  // await classtest.TEST();
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: "test",
+      home: MyBackdropFilter(),
+    );
+  }
+}
+
+class MyBackdropFilter extends StatelessWidget {
+  const MyBackdropFilter({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: Stack(
+      children: [
+        Center( // image for test
+            child: Image.network(
+                "https://t1.blockdit.com/photos/2022/12/63a5ad05e87580fa2d329242_800x0xcover_cnylRDjf.jpg")),
+        // Positioned.fill( ใช้เพื่อให้พอดีกับรูปภาพ in stack
+        Positioned( //use Positioned เพื่อจัดตำแหน่ง widget ภายใน Stack
+          top: 330, //postion top สามารถใช้ bottom ช่วยในการบีมขนาดของ widget ได้
+          left: 50, //postion left สามารถใช้ right ช่วยในการบีมขนาดของ widget ได้
+          child: ClipRRect( //ใช้ ClipRRect ช่วยในการ crop ถ้าไม่ crop BackdropFilter จะ blur ทั้งหน้า
+            child: Container(
+              height: 100, //set height
+              width: 300, //set width
+              child: BackdropFilter( //user BackdropFilter
+                filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5), //use ImageFilter for blur widget X = 5 , y = 5 ค่าการ blure ในแต่ละแกน
+                child: Container(
+                  color: Colors.black.withOpacity(0.1),
+                ),
+              ),
+            ),
+          ),
+        ),
+        Center(
+          child: Container(
+            child: Text(
+              "BackdropFilter",
+              style: TextStyle(fontSize: 40, color: Colors.white),
+            ),
+          ),
+        )
+      ],
+    ));
+  }
+}

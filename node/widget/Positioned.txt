@@ -1,0 +1,84 @@
+class MyPositioned extends StatelessWidget {
+  const MyPositioned({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(title: Text("Positioned")),
+        body: Column(
+          children: [
+            Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [Text("not use Positioned")]),
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(border: Border.all()),
+                margin: EdgeInsets.all(10),
+                width: double.infinity,
+                height: double.infinity,
+                child: Stack(children: [
+                  Container(
+                    height: 150,
+                    width: 150,
+                    color: Colors.red,
+                  ),
+                  Container(
+                    height: 100,
+                    width: 100,
+                    color: Colors.orange,
+                  ),
+                  Container(
+                    height: 50,
+                    width: 50,
+                    color: Colors.brown,
+                  ),
+                ]),
+              ),
+            ),
+            Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [Text("use Positioned")]),
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(border: Border.all()),
+                margin: EdgeInsets.all(10),
+                width: double.infinity,
+                height: double.infinity,
+                child: Stack(children: [
+                  Positioned(
+                    //ใช้ Postioned เพื่อกำหนดตำแหน่งของ widget อย่างอิสระ แต่ถ้าจะให้อิงตามหน้าจอ แนะนำให้ใช้ Align จะดีกว่าครับ
+                    top: 0,
+                    left: 0,
+                    child: Container(
+                      height: 150,
+                      width: 150,
+                      color: Colors.red,
+                    ),
+                  ),
+                  Positioned(
+                    //ใช้ Postioned เพื่อกำหนดตำแหน่งของ widget อย่างอิสระ แต่ถ้าจะให้อิงตามหน้าจอ แนะนำให้ใช้ Align จะดีกว่าครับ
+                    top: 0,
+                    right: 0,
+                    child: Container(
+                      height: 100,
+                      width: 100,
+                      color: Colors.orange,
+                    ),
+                  ),
+                  Positioned(
+                    //ใช้ Postioned เพื่อกำหนดตำแหน่งของ widget อย่างอิสระ แต่ถ้าจะให้อิงตามหน้าจอ แนะนำให้ใช้ Align จะดีกว่าครับ
+                    bottom: 0,
+                    left: 170,
+                    child: Container(
+                      height: 50,
+                      width: 50,
+                      color: Colors.brown,
+                    ),
+                  ),
+                ]),
+              ),
+            )
+          ],
+        ));
+  }
+}

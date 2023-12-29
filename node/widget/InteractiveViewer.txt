@@ -1,0 +1,50 @@
+class MyInteractiveViewer extends StatelessWidget {
+  const MyInteractiveViewer({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("My InteractiveViewer")),
+      body: Column(children: [
+        Expanded(
+            child: Row(
+          children: [
+            Expanded(
+                child: Container(
+              width: double.infinity,
+              height: double.infinity,
+              child: InteractiveViewer(
+                // minScale: 10, //default 0.8
+                maxScale: 20, //setMax Zoom ++
+                boundaryMargin: const EdgeInsets.all(20.0), // set การซูมออก
+                child: Image(
+                  image: NetworkImage(
+                      "https://images.unsplash.com/photo-1679678691010-985ab6b8ff62?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1169&q=80"),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ))
+          ],
+        )),
+        Expanded(
+          child: Row(children: [
+            Expanded(
+                // ใช้เทคนิค ClipRRect เพื่อทำไห้เวลา zoom แล้ว images ไม่ล้นออกนอกพื้นที่เดิม
+                child: ClipRRect(
+              child: InteractiveViewer(
+                // minScale: 10, //default 0.8
+                maxScale: 20, //setMax Zoom ++
+                child: Container(
+                  width: double.infinity,
+                  height: double.infinity,
+                  color: Colors.yellow,
+                  child: Center(child: Text("TEST")),
+                ),
+              ),
+            ))
+          ]),
+        ),
+      ]),
+    );
+  }
+}

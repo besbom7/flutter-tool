@@ -1,0 +1,100 @@
+import 'dart:convert';
+import 'dart:math';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:test/page/page2.dart';
+import './component/ContainerBox.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
+import './core/loading.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+        title: "test", home: MyHome(), builder: FlutterSmartDialog.init());
+  }
+}
+
+class MyHome extends StatefulWidget {
+  const MyHome({super.key});
+  @override
+  State<MyHome> createState() => _MyHomeState();
+}
+
+class _MyHomeState extends State<MyHome> {
+  List<Widget> list = [];
+  var _context;
+
+  void initState() {
+    list.add(LinearProgressIndicator());
+    fetchData();
+  }
+
+  Core(var title) {
+    print(title);
+  }
+
+  Future<void> fetchData() async {
+    showLoading();
+    var response =
+        await http.get(Uri.parse('https://jsonplaceholder.typicode.com/todos'));
+    var jsonResponse = json.decode(response.body);
+    List<Widget> _list = [];
+    for (var d in jsonResponse) {
+      if (list.length < 20) {
+        _list.add(ContainerBox(d["title"] ?? "", d["id"] ?? ""));
+      }
+    }
+    Future.delayed(Duration(seconds: 5), () {
+      setState(() {
+        list = [];
+        list = _list;
+      });
+      closeDialog();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: Text("home"),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return PageDetail();
+                  }));
+                },
+                icon: Icon(Icons.add))
+          ],
+        ),
+        body: ListView.builder(
+            itemCount: list.length,
+            itemBuilder: (context, index) {
+              return list[index];
+            }));
+  }
+}
+
+// void _showLoading() async {
+//   Future.delayed(Duration(milliseconds: 1), () {
+//     SmartDialog.showLoading();
+//   });
+// }
+
+// void _closeDialog() async {
+//   Future.delayed(Duration(milliseconds: 1), () {
+//     SmartDialog.dismiss();
+//   });
+// }
+
+void _showNotify() async {
+  SmartDialog.showNotify(msg: '', notifyType: NotifyType.failure);
+}

@@ -1,0 +1,39 @@
+class MyPageView extends StatelessWidget {
+  var _controller = PageController(); // create Controller
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: PageView(
+          scrollDirection: Axis.vertical, //กำหนดทิศทาง page view ให้เป็นทิศทางแนวตั้ง
+          controller: _controller, //กำหนด Controller
+          children: [
+            Scaffold( 
+              backgroundColor: Colors.red,
+              body: Center(
+                child: Text("Page 1"),
+              ),
+            ),
+            Scaffold(
+              backgroundColor: Colors.orange,
+              body: Center(
+                child: Text("Page 2"),
+              ),
+            ),
+            Scaffold(
+              backgroundColor: Colors.deepOrange,
+              body: Center(
+                child: Text("Page 3"),
+              ),
+            ),
+          ]),
+    );
+  }
+}
+
+
+              //สำหรับ jump to page ที่ต้องการ
+              _con.jumpToPage(index);
+              
+              //สำหรับ jump to page ที่ต้องการ แบบ animation
+              _con.animateToPage(index, curve: Curves.decelerate, duration: Duration(milliseconds: 300)); 

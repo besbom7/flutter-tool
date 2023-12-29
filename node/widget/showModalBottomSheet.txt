@@ -1,0 +1,58 @@
+/* กรณีมีการใช้ set State ใน showModalBottomSheet ต้องครอบ ด้วย StatefulBuilder และใช้ setState ของตัว StatefulBuilder แทนซึ่ง จะต่างกับ setState ข้างนอกใช้ setState แยกกัน ถ้าจะ setState ข้างนอกก็ใช้ setState ถ้าจะ setState ด้านใน showModalBottomSheet ก็ต้องใช้ setState ของ StatefulBuilder
+Excemple 
+
+return StatefulBuilder(builder: (context, setStateModal) {
+  setStateModal(() {}); //up date state in modal
+  setState(() {}); //up date state external
+});
+
+
+*/
+class MyshowModalBottomSheet extends StatefulWidget {
+  const MyshowModalBottomSheet({super.key});
+
+  @override
+  State<MyshowModalBottomSheet> createState() => _MyshowModalBottomSheetState();
+}
+
+class _MyshowModalBottomSheetState extends State<MyshowModalBottomSheet> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: Center(
+            child: ElevatedButton(
+      onPressed: () {
+        showModalBottomSheet<void>(
+            // create modal
+            context: context,
+            backgroundColor: Colors.green[200], //set background color
+            elevation: 0, // set เงาของ modal
+            barrierColor: Colors.orange[50], //set สีด้านนอก modal ไม่จำเป็น
+            isScrollControlled:
+                false, //กำหนดให้ scroll และ ทำให้ modal เต็มหน้าจอ ไม่จำเป็น
+            useRootNavigator:
+                false, //กำหนด true กรณีมีการใช้ Menu Buttom ด้านล่าง ไม่จำเป็น
+            isDismissible: true, // set เวลากดนอกตัว modal จะให้ modal ปิดไหม
+            enableDrag: true, //set modal ให้สามาเลื่อนได้หรือไหม
+            useSafeArea: true, //set modal ให้อยู่ใน SafeArea
+            builder: (BuildContext context) {
+              return Container(
+                  height: double.infinity,
+                  // color: Colors.red[100],
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text("close"),
+                      )
+                    ],
+                  ));
+            });
+      },
+      child: Text("showModalBottomSheet"),
+    )));
+  }
+}

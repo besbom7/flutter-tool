@@ -1,0 +1,30 @@
+
+
+class MySwitch extends StatefulWidget {
+  const MySwitch({super.key});
+  @override
+  State<MySwitch> createState() => _MySwitchState();
+}
+
+class _MySwitchState extends State<MySwitch> {
+  var switch_value = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: SwitchListTile(
+          tileColor: Colors.green,
+          title: Text("Exemple SwitchListTile"),
+          onChanged: (bool value) {
+            setState(() {
+              switch_value = value;
+              print(switch_value);
+            });
+          },
+          value: switch_value,
+        ),
+      ),
+    );
+  }
+}

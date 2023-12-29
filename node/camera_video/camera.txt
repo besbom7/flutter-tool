@@ -1,0 +1,172 @@
+import 'dart:io';
+import 'dart:math';
+import 'dart:ui';
+
+import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import './model/test.dart';
+import './model/fileClasstest.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:camera/camera.dart';
+
+//01. install ( flutter pub add camera )
+
+late List<CameraDescription>
+    cameras; //สร้างตัวแปลรายการ option ของ camera (กล้องหน้า , หลัง)
+Future<void> main() async {
+  WidgetsFlutterBinding
+      .ensureInitialized(); //ใช้เพื่อให้มั่นใจว่าเราจะใช้ async และ await ใน main ก่อนที่จะ runApp() ถ้าไม่ใช้การทำงานจะไม่หยุดรอ
+  cameras =
+      await availableCameras(); //create รายการ option ของ camera (กล้องหน้า , หลัง)
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(title: "test", home: MyCamera());
+  }
+}
+
+class MyCamera extends StatefulWidget {
+  const MyCamera({super.key});
+
+  @override
+  State<MyCamera> createState() => _MyCameraState();
+}
+
+class _MyCameraState extends State<MyCamera> {
+  late CameraController cameraController;
+  var direction = 0; //set default option กล้องหน้า
+
+  @override
+  void initState() {
+    startCamera(0); //เรียกใช้ Camera option 0 (กล้องหน้า)
+    super.initState();
+  }
+
+  Future<void> startCamera(var direction) async {
+    //setting Camera controller
+    cameraController = CameraController(
+      cameras[direction], //camera option (กล้องหน้า , หลัง)
+      ResolutionPreset.high, //ขนาดความกว้างยาวของ กล้องสามารถปรับความสูงได้
+      enableAudio: false, //กำหนด การทำงานวีดีโอเป็น false ปิด
+    );
+
+    //initialize Camera controller
+    cameraController.initialize().then((value) {
+      if (!mounted) {
+        //เช็คว่าการทำงานของ camera ทำงานได้ใหมถ้าเป็น false ให้ retrun ไปเลย
+        return;
+      }
+      setState(() {}); //set state for refetch camera
+    }).catchError((Object e) {
+      if (e is CameraException) {
+        switch (e.code) {
+          case "CameraAccessDenied":
+            print("Acess denied");
+            break;
+          default:
+            print(e.description);
+            break;
+        }
+      }
+      print(e);
+    });
+  }
+
+  //ถ้าใช้ camera ต้องใช้ dispose ด้วย เพื่อไม่ให้หน่วยความจำค้าง หรือ รั่วไหล
+  @override
+  void dispose() {
+    cameraController.dispose(); // clear memory
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: Stack(children: [
+        CameraPreview(cameraController), //show Camera preview
+        GestureDetector(
+          onTap: () {
+            setState(() {
+              //switch กล้องหน้าและกล้องหลัง
+              direction = direction == 0 ? 1 : 0;
+              startCamera(direction);
+            });
+          },
+          child: Align(
+            alignment: Alignment.bottomLeft,
+            child: Container(
+              margin: EdgeInsets.fromLTRB(20, 0, 0, 0),
+              width: 50,
+              height: 50,
+              decoration:
+                  BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+              child: Center(child: Icon(Icons.flip_camera_ios_outlined)),
+            ),
+          ),
+        ),
+        GestureDetector(
+          onTap: () async {
+            //set flase แสงไฟแบบ auto
+            await cameraController.setFlashMode(FlashMode.auto);
+
+            //cap picture use take picture ถ่ายภาพ
+            cameraController.takePicture().then((XFile? file) {
+              //เช็คว่า Camera ทำงานอยู่ใหมถ้าทำให้ เป็น true
+              if (mounted) {
+                if (file != null) {
+                  print("Picture saved success ${file.path}");
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) {
+                      return ViewImage(
+                          file); //rount to view image by send file value
+                    }),
+                  );
+                }
+              }
+            });
+          },
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              margin: EdgeInsets.fromLTRB(20, 0, 0, 0),
+              width: 50,
+              height: 50,
+              decoration:
+                  BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+              child: Center(child: Icon(Icons.camera_alt_outlined)),
+            ),
+          ),
+        )
+      ]),
+    );
+  }
+}
+
+class ViewImage extends StatefulWidget {
+  ViewImage(this.file, {super.key});
+  XFile file;
+
+  @override
+  State<ViewImage> createState() => _ViewImageState();
+}
+
+class _ViewImageState extends State<ViewImage> {
+  @override
+  Widget build(BuildContext context) {
+    String test = widget.file.path; //get value file in widget
+    File picture = File(widget.file.path); //convert path file to
+    return Scaffold(
+      appBar: AppBar(title: Text("view image")),
+      body: Image.file(picture), //show imges in picute file
+    );
+  }
+}

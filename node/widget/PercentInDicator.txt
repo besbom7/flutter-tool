@@ -1,0 +1,71 @@
+//ProgressBar
+
+class MyPercentInDicator extends StatefulWidget {
+  const MyPercentInDicator({super.key});
+
+  @override
+  State<MyPercentInDicator> createState() => _MyPercentInDicatorState();
+}
+
+class _MyPercentInDicatorState extends State<MyPercentInDicator> {
+  var persen = 0.01;
+
+  void onTimer() {
+    persen = 0.00;
+    Timer.periodic(Duration(milliseconds: 40), (timer) { // setinterval
+      setState(() {
+        persen += 0.01;
+        if (persen > 1) {
+          persen = 1;
+          timer.cancel();
+        }
+      });
+    });
+  }
+
+  String convert(double persen) {
+    var value = persen * 100;
+    return "${value.toInt()}%";
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("percent indicator")),
+      body: Center(
+          child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CircularPercentIndicator(
+            //progess percent แบบ วงกลม
+            radius: 60, //ความกว้างไหญ่ของวงกลม
+            backgroundColor:
+                Colors.red.withOpacity(0.5), // พื้นหลังของ progressbar
+            progressColor: Colors.red, //สีของ progressbar
+            lineWidth: 7.0, //ความหนาของเส้น
+            percent: persen, //จำนวน percent เต็มที่ 1 ต่ำสุด 0 (double)
+            center: Text("${convert(persen)}"), //text in center
+          ),
+          SizedBox(height: 20),
+          LinearPercentIndicator(
+            // progress percent แบบ เส้นตรง
+            backgroundColor:
+                Colors.green.withOpacity(0.5), // พื้นหลังของ progressbar
+            progressColor: Colors.green, //สีของ progressbar
+            percent: persen, //จำนวน percent เต็มที่ 1 ต่ำสุด 0 (double)
+            lineHeight: 7, //ความหนาของเส้น
+            restartAnimation: false,
+          ),
+          SizedBox(height: 30),
+          MaterialButton(
+            onPressed: () {
+              onTimer();
+            },
+            color: Colors.red,
+            child: Text("open percent"),
+          )
+        ],
+      )),
+    );
+  }
+}

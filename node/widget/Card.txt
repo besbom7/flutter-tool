@@ -1,0 +1,27 @@
+class MyCard extends StatelessWidget {
+  const MyCard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        backgroundColor: Color.fromARGB(255, 232, 232, 232),
+        body: Center(
+          child: Container(
+            width: 200,
+            height: 200,
+            child: Card(
+              elevation: 10, //ความหนาของเงา
+              shadowColor: Colors.orange[700], // shadow color
+              color: Colors.white, // card color
+              margin: EdgeInsets.all(5), // margin
+              shape: RoundedRectangleBorder(
+                  // border color and bor radius
+                  side: BorderSide(color: Color.fromARGB(255, 120, 120, 120)),
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20))),
+            ),
+          ),
+        ));
+  }
+}

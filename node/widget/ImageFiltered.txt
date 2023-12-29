@@ -1,0 +1,37 @@
+class MyImageFiltered extends StatelessWidget {
+  const MyImageFiltered({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Column(children: [
+        Expanded(
+            child: Center(
+          child: ImageFiltered(
+            //use imageFiltered
+            imageFilter: ImageFilter.blur(
+                sigmaX: 3, sigmaY: 3), //user ImageFilter blur widget
+            child: Container(
+              width: double.infinity,
+              child: FittedBox(
+                child: Image.network(
+                    "https://static.vecteezy.com/ti/photos-gratuite/p2/6671766-fantastique-lune-magique-lumiere-et-eau-bateau-avec-papier-peint-arbre-gratuit-photo.jpg"),
+              ),
+            ),
+          ),
+        )),
+        Expanded(
+          child: Container(
+            child: ImageFiltered(
+              //use imageFiltered
+              imageFilter: ImageFilter.matrix(Matrix4.rotationZ(0.2)
+                  .storage), //use ImageFilter Matrix หรือใช้การหมุนภาพ
+              child: Image.network(
+                  "https://static.vecteezy.com/ti/photos-gratuite/p2/6671766-fantastique-lune-magique-lumiere-et-eau-bateau-avec-papier-peint-arbre-gratuit-photo.jpg"),
+            ),
+          ),
+        )
+      ]),
+    );
+  }
+}

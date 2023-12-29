@@ -1,0 +1,58 @@
+class TabBarViewOnTop extends StatelessWidget {
+  const TabBarViewOnTop({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTabController(
+        // ใช้ defaultTabController ในการทำงานเป็นหลัก
+        length: 3,
+        child: Scaffold(
+            appBar: AppBar(
+              title: Text("Tab Bar View On Top"),
+              // elevation: 0,
+            ),
+            body: Column(
+              children: [
+                TabBar(tabs: [
+                  //จำนวน menu ด้านบน
+                  Tab(
+                    icon: Icon(
+                      Icons.home,
+                      color: Colors.pinkAccent,
+                    ),
+                  ),
+                  Tab(
+                    icon: Icon(
+                      Icons.send,
+                      color: Colors.blue,
+                    ),
+                    child: Text("send", style: TextStyle(color: Colors.red)),
+                  ),
+                  Tab(
+                    icon: Icon(
+                      Icons.reset_tv,
+                      color: Colors.green,
+                    ),
+                  ),
+                ]),
+                Expanded(
+                  //เคสนี้ต้อง ครอบด้วย Expanded เพราะต้องมีการกำหนดขนาดที่แน่นอนไม่งั้นจะเดินข้อผิดพลาด
+                  child: TabBarView(
+                    // page ที่แสดงตาม menu
+                    children: [
+                      Container(
+                        child: Center(child: Text("Home")),
+                      ),
+                      Container(
+                        child: Center(child: Text("Send")),
+                      ),
+                      Container(
+                        child: Center(child: Text("Reset")),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            )));
+  }
+}

@@ -1,0 +1,62 @@
+
+
+class MyDefaultTabController extends StatefulWidget {
+  const MyDefaultTabController({super.key});
+
+  @override
+  State<MyDefaultTabController> createState() => _MyDefaultTabControllerState();
+}
+
+class _MyDefaultTabControllerState extends State<MyDefaultTabController> {
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTabController( //การแสดง View แบบ slid ได้คล้ายกับ owl carousel
+      length: 4, //จำนวนของหน้า page view
+      child: Scaffold(
+        backgroundColor: Colors.green,
+        body: TabBarView( // TabbarView ใช้สำหรับการแสดง View 
+          children: [
+            Scaffold(
+              body: Center(
+                child: Text("Home"),
+              ),
+            ),
+            Scaffold(
+              body: Center(
+                child: Text("Add"),
+              ),
+            ),
+            Scaffold(
+              body: Center(
+                child: Text("Message"),
+              ),
+            ),
+            Scaffold(
+              body: Center(
+                child: Text("Time"),
+              ),
+            ),
+          ],
+        ),
+        bottomNavigationBar: TabBar(tabs: [ // ไม่จำเป็นต้องใช้ก็ได้ถ้าต้องการใช้แต่ Default Tab Controller
+          Tab(
+            text: "Home",
+            icon: Icon(Icons.home),
+          ),
+          Tab(
+            text: "Add",
+            icon: Icon(Icons.add),
+          ),
+          Tab(
+            text: "Message",
+            icon: Icon(Icons.message),
+          ),
+          Tab(
+            text: "Time",
+            icon: Icon(Icons.time_to_leave),
+          ),
+        ]),
+      ),
+    );
+  }
+}

@@ -1,0 +1,55 @@
+//Timer การวนนับเวลา การทำงานคล้าย setInterval ใน ภาษา javaScript
+
+class MyTimer extends StatefulWidget {
+  const MyTimer({super.key});
+
+  @override
+  State<MyTimer> createState() => _MyTimerState();
+}
+
+class _MyTimerState extends State<MyTimer> {
+  int number = 10;
+
+  startTimer() {
+    Timer.periodic(
+        Duration(seconds: 1 /* กำหนด duration คุณสมบัติว่าจะไห้ timer กี่วิ */),
+        (timer) {
+      if (number > 0) {
+        setState(() {
+          number -= 1;
+        });
+      } else {
+        timer.cancel(); //ยกเลิกการนับ Timer
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child:
+            Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+          Text(
+            number.toString(),
+            style: TextStyle(fontSize: 40),
+          ),
+          MaterialButton(
+            color: Colors.orange[100],
+            onPressed: () => startTimer(),
+            child: Text("START TIMER"),
+          ),
+          MaterialButton(
+            color: Colors.orange[100],
+            onPressed: () {
+              setState(() {
+                number = 10;
+              });
+            },
+            child: Text("RESET TIMER"),
+          ),
+        ]),
+      ),
+    );
+  }
+}

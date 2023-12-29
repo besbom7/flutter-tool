@@ -1,0 +1,39 @@
+List<String> list = ["A", "B", "C", "D", "E", "F", "G", "H", "I"];
+
+class MyPopupMenuButton extends StatefulWidget {
+  const MyPopupMenuButton({super.key});
+
+  @override
+  State<MyPopupMenuButton> createState() => _MyPopupMenuButtonState();
+}
+class _MyPopupMenuButtonState extends State<MyPopupMenuButton> {
+  var selected = list.first;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("PopupMenuButton")),
+      body: Center(
+        child: PopupMenuButton(
+          //create Icon Menu
+          itemBuilder: (BuildContext context) {
+            //builder PopupMenuItem list
+            return list.map((value) {
+              return PopupMenuItem(child: Text(value), value: value);
+            }).toList(); //return list menu
+          },
+          child: Icon(Icons.add, size: 40), //set Icon Menu
+          elevation: 3, //กำหนดเงาของ menu
+          color: Colors.orange[100], //กำหนดสีพื้นหลัง menu
+          initialValue: selected, //set value (ngModel)
+          onSelected: (var value) {
+            //set value เวลา select
+            setState(() {
+              selected = value!;
+            });
+          },
+        ),
+      ),
+    );
+  }
+}

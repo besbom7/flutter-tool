@@ -1,0 +1,13 @@
+import 'dart:async';
+Future<String> MyDelayAsync() async {
+  await Future.delayed(Duration(seconds: 5), () {
+    return "Time out success";
+  });
+  return "";
+}
+
+void MyDelay() {
+  Future.delayed(Duration(seconds: 3), () {
+    print("// Time out success");
+  });
+}

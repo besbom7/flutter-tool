@@ -1,0 +1,48 @@
+class MyBottomNavigationBar extends StatefulWidget {
+  const MyBottomNavigationBar({super.key});
+
+  @override
+  State<MyBottomNavigationBar> createState() => _MyBottomNavigationBarState();
+}
+
+class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
+  int currentPage = 0;
+  setPositionPage(int index) {
+    setState(() {
+      currentPage = index;
+    });
+  }
+
+  List<Widget> page = [
+    Center(
+      child: Text("Home"),
+    ),
+    Center(
+      child: Text("Add"),
+    ),
+    Center(
+      child: Text("Message"),
+    ),
+    Center(
+      child: Text("Home"),
+    ),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: page[currentPage],
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: currentPage, // default Page และ Current Page
+        type: BottomNavigationBarType.fixed, // Type ของ BottomNavigationBar เอาใว้กำหนดกรณีมี Item มากกว่า 3 ขึ้นไป
+        onTap: setPositionPage, // Event 
+        items: [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),  //Item ของ ButtomNavigationBar
+          BottomNavigationBarItem(icon: Icon(Icons.add), label: "Add"),
+          BottomNavigationBarItem(icon: Icon(Icons.message), label: "Message"),
+          BottomNavigationBarItem(icon: Icon(Icons.access_time), label: "Time"),
+        ],
+      ),
+    );
+  }
+}

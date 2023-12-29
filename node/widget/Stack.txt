@@ -1,0 +1,29 @@
+class MyStack extends StatelessWidget {
+  const MyStack({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(title: Text("my Stack")),
+        body: Stack(
+          alignment: Alignment.center,
+          children: [
+            Container(
+              color: Colors.yellow,
+              width: 400,
+              height: 400,
+            ),
+            Container(
+              color: Colors.green,
+              width: 300,
+              height: 300,
+            ),
+            Container(
+              color: Colors.red,
+              width: 200,
+              height: 200,
+            )
+          ],
+        ));
+  }
+}

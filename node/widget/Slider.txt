@@ -1,0 +1,46 @@
+class MySlider extends StatefulWidget {
+  const MySlider({super.key});
+
+  @override
+  State<MySlider> createState() => _MySliderState();
+}
+
+class _MySliderState extends State<MySlider> {
+  var valueScroll = 0.0;
+  var valueScroll2 = 0.0;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Slider(
+              min: 0, // จำนวนต่ำสุด
+              max: 10, // จำนวนสูงสุด
+              label: "$valueScroll", // lable แสดงข้อมูล
+              value: valueScroll, // value slider
+              divisions: 5, //ช่วงของการเลือกข้อมูล
+              thumbColor: Colors.green, // สีของปุ่มวงกลม
+              activeColor: Colors.orange, // สีของแทบซ้าย
+              inactiveColor: Colors.red[300], // สีของแทบขวา
+              onChanged: (value) {
+                setState(() {
+                  valueScroll = value;
+                });
+              },
+            ),
+            Slider(
+                value: valueScroll2,
+                onChanged: (value) {
+                  setState(() {
+                    valueScroll2 = value;
+                  });
+                })
+          ],
+        ),
+      ),
+    );
+  }
+}

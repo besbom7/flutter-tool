@@ -1,0 +1,108 @@
+
+class MyAlign extends StatelessWidget {
+  const MyAlign({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("My Align")),
+      body: Column(children: [
+        Expanded(
+            child: Container(
+          color: Colors.green.withOpacity(0.7),
+          child: Align(
+            alignment: Alignment(0.9, -0.9),
+            child: Text("Position"),
+          ),
+        )),
+        Expanded(
+            child: Container(
+          color: Colors.yellow.withOpacity(0.7),
+        ))
+      ]),
+    );
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+class MyAlign extends StatelessWidget {
+  const MyAlign({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("My Align")),
+      body: Column(children: [
+        Expanded(
+            child: Container(
+                color: Colors.green.withOpacity(0.7),
+                child: Stack(
+                  children: [
+                    Align(
+                      alignment: Alignment(0.9, -0.9),
+                      child: Text(
+                        "-1",
+                        style: TextStyle(fontSize: 25),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment(0.9, 0.9),
+                      child: Text(
+                        "1",
+                        style: TextStyle(fontSize: 25),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment(-0.9, 0.9),
+                      child: Text(
+                        "-1",
+                        style: TextStyle(fontSize: 25),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment(-0.7, -0.5),
+                      child: Text(
+                        "current position",
+                        style: TextStyle(
+                          fontSize: 25,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ],
+                ))),
+        Expanded(
+            child: Container(
+          color: Colors.yellow.withOpacity(0.7),
+          child: Align(
+              alignment: Alignment.center,
+              child: Text(
+                "current position",
+                style: TextStyle(fontSize: 25),
+              )),
+        ))
+      ]),
+    );
+  }
+}
+
+
+
+
+
+
+
+
+
+
+

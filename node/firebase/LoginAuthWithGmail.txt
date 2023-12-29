@@ -1,0 +1,161 @@
+import 'dart:math';
+import 'dart:ui';
+
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import './model/test.dart';
+import './model/fileClasstest.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+/*
+01.Login fire base 
+02.go to console in fire base
+03.create project fire base
+04.register application android and ios or web 
+05.create FireStore Database and create Realtime Database
+06.add pubspec ( firebase_core , cloud_firestore )
+07.add pubspec ( firebase_auth )
+*/
+
+void main() async {
+  // //08. initial Firebase ดูมาจาก web (https://firebase.flutter.dev/docs/overview/)
+  WidgetsFlutterBinding.ensureInitialized(); //initial Firebase
+  await Firebase.initializeApp(); //initial Firebase
+  // ClassTest classtest = ClassTest();
+  // await classtest.TEST();
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(title: "test", home: MySinginGoogle());
+  }
+}
+
+//fron video : https://www.youtube.com/watch?v=1U8_Mq1QdX4
+
+//how to create login google gmail
+//01.install application in firebase | exemple D:\PROGRAMMING\Learn Flutter\test\node\firebase\getStartedFireBase.txt
+//02.use firebase auth
+//03.enabled singin-method login emain and gmail
+//04.add pubdev (google_sign_in) in pubspec
+
+/*0.5
+  01.setup | exemple https://pub.dev/packages/google_sign_in (readme)
+  02.copy code to | ios\Runner\Info.plist and edit ID  (<string>com.googleusercontent.apps.861823949799-vc35cprkp249096uujjn0vvnmcvjppkn</string>)
+     เอา ID มา จาก REVERSED_CLIENT_ID ใน file  | ios\Runner\GoogleService-Info.plist
+
+    <!-- Put me in the [my_project]/ios/Runner/Info.plist file -->
+  <!-- Google Sign-in Section -->
+  <key>CFBundleURLTypes</key>
+  <array>
+    <dict>
+      <key>CFBundleTypeRole</key>
+      <string>Editor</string>
+      <key>CFBundleURLSchemes</key>
+      <array>
+        <!-- TODO Replace this value: -->
+        <!-- Copied from GoogleService-Info.plist key REVERSED_CLIENT_ID -->
+        <string>com.googleusercontent.apps.861823949799-vc35cprkp249096uujjn0vvnmcvjppkn</string>
+      </array>
+    </dict>
+  </array>
+  <!-- End of the Google Sign-in Section -->
+*/
+
+/*
+06.กำหนด SHA1 ที่ firebase ด้วยถ้าเป็น Android โดยไปการหนดที่ Project setting
+  01.วิธีการหา SHA1 ดูได้ที่ youtube https://youtu.be/FmHIrrpE0Sw ครับ
+*/
+
+class MySinginGoogle extends StatefulWidget {
+  const MySinginGoogle({super.key});
+
+  @override
+  State<MySinginGoogle> createState() => _MySinginGoogleState();
+}
+
+class _MySinginGoogleState extends State<MySinginGoogle> {
+  var uid = "";
+  var email = "";
+
+  final auth = FirebaseAuth
+      .instance; //get instance เพื่อใช้สำหรับ logout หรือ get detail
+
+  void SinginWithGoogle() async {
+    final GoogleSignInAccount? gUser = await GoogleSignIn()
+        .signIn(); //07.ทำการเรียกส่วนการทำงานของ GoogleSignIn หรือเรียกหน้า popup ให้ระบุ gmail and password
+
+    final GoogleSignInAuthentication gAuth = await gUser!
+        .authentication; //08.เมือ login gmail เสร็จให้ทำการดึงข้อมูล Auth ของ gUser มาเก็บใว้ที่ตัวแปล gAuth
+
+    final credential = GoogleAuthProvider.credential(
+      //09.ทำการสร้าง credential เพื่อเอาใว้สำหรับ Register Auth ของ Email หลัก โดยจะระบุ accessToken and idToken
+      accessToken: gAuth.accessToken,
+      idToken: gAuth.idToken,
+    );
+
+    await FirebaseAuth.instance.signInWithCredential(credential).then((value) {
+      //ทำการ Register email ด้วย credential ที่สร้างขึ้น เหมือนขั้นตอนการ Register Email ปกคิแต่เปลี่ยนเป็น Register ด้วย credential แทน
+      print(auth.currentUser!.email!);
+      print(auth.currentUser!.uid!);
+      setState(() {
+        email = auth.currentUser!.email!;
+        uid = auth.currentUser!.uid!;
+      });
+    });
+  }
+
+  void SingOut() {
+    // sing Out Authentication
+    auth.signOut().then((value) async {
+      // use Sign out
+      await GoogleSignIn().signOut(); //use Sign out with google gmail
+      setState(() {
+        email = "";
+        uid = "";
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            MaterialButton(
+              onPressed: () {
+                SingOut();
+              },
+              child: Text("Sign out Google"),
+              color: Colors.red,
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            MaterialButton(
+              onPressed: () {
+                SinginWithGoogle();
+              },
+              child: Text("Sign in Google"),
+              color: Colors.green,
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            Text("$email"),
+            Text("$uid")
+          ],
+        ),
+      ),
+    );
+  }
+}

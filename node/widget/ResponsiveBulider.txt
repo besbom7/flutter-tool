@@ -1,0 +1,79 @@
+class ResponsiveBulider extends StatefulWidget {
+  const ResponsiveBulider({super.key});
+
+  @override
+  State<ResponsiveBulider> createState() => _ResponsiveBuliderState();
+}
+
+class _ResponsiveBuliderState extends State<ResponsiveBulider> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: ResponsiveBuilder(
+        builder: (context, sizingInformation) {
+          if (sizingInformation.deviceScreenType == DeviceScreenType.desktop) {
+            print("Desktop");
+            return GridView(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 5, mainAxisSpacing: 5, crossAxisSpacing: 5),
+              children: [
+                Container(color: Colors.red),
+                Container(color: Colors.red),
+                Container(color: Colors.red),
+                Container(color: Colors.red),
+                Container(color: Colors.red)
+              ],
+            );
+          } else if (sizingInformation.deviceScreenType ==
+              DeviceScreenType.tablet) {
+            print("Tablet");
+            return GridView(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 4, mainAxisSpacing: 5, crossAxisSpacing: 5),
+              children: [
+                Container(color: Colors.red),
+                Container(color: Colors.red),
+                Container(color: Colors.red),
+                Container(color: Colors.red),
+                Container(color: Colors.red)
+              ],
+            );
+          } else if (sizingInformation.deviceScreenType ==
+              DeviceScreenType.mobile) {
+            print("Mobile");
+            return GridView(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3, mainAxisSpacing: 5, crossAxisSpacing: 5),
+              children: [
+                Container(color: Colors.red),
+                Container(color: Colors.red),
+                Container(color: Colors.red),
+                Container(color: Colors.red),
+                Container(color: Colors.red)
+              ],
+            );
+          } else if (sizingInformation.deviceScreenType ==
+              DeviceScreenType.watch) {
+            print("Watch");
+            return GridView(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 1, mainAxisSpacing: 5, crossAxisSpacing: 5),
+              children: [
+                Container(color: Colors.red),
+                Container(color: Colors.red),
+                Container(color: Colors.red),
+                Container(color: Colors.red),
+                Container(color: Colors.red)
+              ],
+            );
+          }
+          print("no size");
+          return Container(
+            child: Expanded(child: Text("size not support eiei")),
+            color: Colors.green,
+          );
+        },
+      ),
+    );
+  }
+}

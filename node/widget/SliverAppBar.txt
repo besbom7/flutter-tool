@@ -1,0 +1,70 @@
+class MySliverAppBar extends StatelessWidget {
+  const MySliverAppBar({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        backgroundColor: Colors.deepPurple[100],
+        body: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              leading: Icon(Icons.menu), //left menu icon
+              // custom AppBar ใช้คู่กับ DustomScrollView
+              backgroundColor: Colors.orange,
+              expandedHeight: 300, // กำหนดความสูงของ AppBar,
+              floating:
+                  false, //floating ถ้าป็น ture เวลาเลื่อนขึ้น appBar จะแสดงลงมา ปกติจะต้องเลื่อนไปถึงด้านบนก่อน | default = false
+              pinned:
+                  true, //pinned ถ้าเป็น true เวลาเลื่อนลง หัว AppBar จะไม่หายไป ปกติจะเลือนหายไปตาม ScrollView  | default = false
+              flexibleSpace: FlexibleSpaceBar(
+                //กำหนด backgroud และ title ให้กับ Appbar สามารถใส่รูปได้ด้วย
+                background: Container(
+                  color: Colors.green,
+                ),
+                title: Text("My SliverAppBar"),
+              ),
+            ),
+            SliverToBoxAdapter(
+              //กำหนด body ของ Appbar ต้อกำหนดใน SliverToBoxAdaper เท่านั้น ไม่สามารถกำหนด Container อย่างเดียวได้
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Container(
+                  width: 400,
+                  height: 300,
+                  color: Colors.blue[100],
+                ),
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Container(
+                  width: 400,
+                  height: 300,
+                  color: Colors.blue[100],
+                ),
+              ),
+            ),
+            SliverGrid(
+              // Sliver Grid build
+              delegate: SliverChildBuilderDelegate(
+                // Build Grid
+                (context, index) {
+                  return Container(
+                    color: Colors.green,
+                  );
+                },
+                childCount: 20, // จำนวนช้อมูล
+              ),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                //Setting Grid
+                crossAxisCount: 3, //จำนวน grid column
+                mainAxisSpacing: 20, //ช่องว่างบนล่าง ไม่จำเป็น
+                crossAxisSpacing: 10, //ช่องว่าง ซ้าย ขวา ไม่จำเป็น
+                childAspectRatio: 1.0, // อัตราส่วนภาพ ไม่จำเป็น
+              ),
+            )
+          ],
+        ));
+  }
+}

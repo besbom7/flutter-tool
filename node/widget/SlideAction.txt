@@ -1,0 +1,65 @@
+//01.add pugin slide_to_act: ^2.0.1 in file pubspec.yaml
+//02.import 'package:slide_to_act/slide_to_act.dart';
+
+class MySlideAction extends StatefulWidget {
+  const MySlideAction({super.key});
+
+  @override
+  State<MySlideAction> createState() => _MySlideActionState();
+}
+
+class _MySlideActionState extends State<MySlideAction> {
+  void _showDialog() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("title"),
+            content: Text("unlock"),
+            actions: [
+              MaterialButton(
+                  child: Text("OK"),
+                  color: Colors.green,
+                  onPressed: () {
+                    Navigator.pop(context);
+                  })
+            ],
+          );
+        });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SlideAction(
+                //ใช้ SlideAction
+                elevation: 0, //กำหนดเงา border
+                borderRadius: 10, //กำหนดความโค้งของขอบ
+                innerColor: Colors.green, //สีปุ่ม ICON
+                outerColor: Colors.orange, //สีพื้นหลัง
+                sliderButtonIcon: Icon(
+                  // custom Icon ไอคอนปุ่ม
+                  Icons.lock_open,
+                  color: Colors.white,
+                ),
+                reversed: false, //set ปุ่มไปอีกฝั่ง
+                sliderRotate: true, // setค่าการหมุนของ button icon เวลา slide
+                text: "Slide to Unlock", // text
+                textStyle:
+                    TextStyle(fontSize: 30, color: Colors.red), //Text Style
+                // submittedIcon:  Icon(Icons.open_in_browser),
+                onSubmit: () => _showDialog(), // function on submit
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

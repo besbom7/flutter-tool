@@ -1,0 +1,124 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:provider/provider.dart';
+
+//url https://pub.dev/packages/flutter_local_notifications
+
+//install
+/* dependencies:
+  flutter_local_notifications: ^13.0.0*/
+
+//sutup สำหรับ IOS ต้องไปแก้ไข native ของ IOS ที่ไฟล์  D:\PROGRAMMING\Learn Flutter\test\ios\Runner\AppDelegate.swift
+/*
+  สำหรับ Swift เพิ่ม code เพื่อให้ตัว IOS support version old
+
+    if #available(iOS 10.0, *) {
+      UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
+    }
+
+  สามารถดูตัวอย่างการ เพิ่ม code ได้ที่ D:\PROGRAMMING\Learn Flutter\test\ios\Runner\AppDelegate.swift
+*/
+
+//01. สร้าง Local Notification Plugin สำหรับใช้ในการ ประกาศ
+FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+
+Future<void> main() async {
+  //02. Initialized flutter สำหรับ setup LocalNotification
+  WidgetsFlutterBinding.ensureInitialized();
+
+//03.สร้าง setting Initialized for Android
+  const AndroidInitializationSettings initializationSettingsAndroid =
+      AndroidInitializationSettings(
+          "@mipmap/ic_launcher"); //เอาไฟล์มาจาก D:\flutter\basic\basic\android\app\src\main\res\mipmap-hdpi\ic_launcher.png
+
+//03.สร้าง setting Initialized for IOS
+  const DarwinInitializationSettings darwinInitializationSettings =
+      DarwinInitializationSettings(
+    requestAlertPermission: true, //ขอ permision ส่วนของการ alert
+    requestBadgePermission:
+        true, //ขอ permision ส่วนของการ แสดงจำนวนตัวเลขแจ้งเตือนที่ icon application
+    requestSoundPermission:
+        true, //ขอ permision ส่วนของการ ใช้เสียง notification
+  );
+
+//04.สร้าง Initialized setting สำหรับรามทุก แพทฟอร์ม และนำค่า Initialized ของ Android และ IOS มา setting
+  final InitializationSettings initializationSettings = InitializationSettings(
+      android: initializationSettingsAndroid, // Initialized setting Android
+      iOS: darwinInitializationSettings // Initialized setting IOS
+      );
+
+//05. นำค่า initializationSettings ที่รวมทุก แพทฟอร์ม มา initialize ไห้กับ flutterLocalNotificationsPlugin
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: "MyApp",
+      home: MyNotification(),
+      theme: ThemeData(primarySwatch: Colors.green),
+    );
+  }
+}
+
+class MyNotification extends StatefulWidget {
+  const MyNotification({super.key});
+
+  @override
+  State<MyNotification> createState() => _MyNotificationState();
+}
+
+class _MyNotificationState extends State<MyNotification> {
+  showNotificateion() async {
+    // สร้าง detail และ channel สำหรับ Android
+    const AndroidNotificationDetails androidNotificationDetails =
+        AndroidNotificationDetails(
+            'nexflow_noti_001', //กำหนด channel id
+            'แจ้งเตือนทั่วไป', //กำหนด channel name
+            importance: Importance.max, //ระบุลำดับความสำคัญ
+            ticker:
+                "ticker" //ระบุ ticker เพื่อไห้ notification support Android รุ่นเก่าๆ
+            );
+
+    // สร้าง detail detail และ channel สำหรับ IOS ไม่จำเป็นต้องสร้างก็ได้ถ้าไม่ต้องการมีลูกเล่นอะไร
+    const DarwinNotificationDetails darwinNotificationDetails =
+        DarwinNotificationDetails(
+      badgeNumber: 3, //จำนวนตัวเลขแจ้งเตือนที่ icon application
+      subtitle: "detail", //หัวข้อ subtitle
+    );
+
+    // set Notification detail ของแต่ละ แพทฟอร์ม มา setup
+    const NotificationDetails notificationDetails = NotificationDetails(
+        android: androidNotificationDetails, //setup setting for android
+        iOS: darwinNotificationDetails //setup setting for IOS
+        );
+
+    //สั่งให้ flutter local notification แจ้งเตือน
+    await flutterLocalNotificationsPlugin.show(
+      0, // id
+      "title", // title
+      "body or subtitle ", // body or subtitle
+      notificationDetails, // nodefication channel
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(title: Text("Local notification")),
+        body: Center(
+          child: TextButton(
+            child: Text("click me for alert notification"),
+            onPressed: () {
+              showNotificateion();
+            },
+          ),
+        ));
+  }
+}

@@ -1,0 +1,100 @@
+class MySearchAppBar extends StatefulWidget {
+  const MySearchAppBar({super.key});
+
+  @override
+  State<MySearchAppBar> createState() => _MySearchAppBarState();
+}
+
+class _MySearchAppBarState extends State<MySearchAppBar> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("search bar"),
+        actions: [
+          //01. create search bar in appbar action
+          IconButton(
+              //02. create icon button search bar
+              onPressed: () => showSearch(
+                    //03. create show search
+                    context: context,
+                    delegate:
+                        CustomSearchDelegate(), //04. ใช้ class delegate สำหรับใช้ custom search bar
+                  ),
+              icon: Icon(Icons.search))
+        ],
+      ),
+      body: Center(
+          child: Text(
+        "Search Filter",
+        style: TextStyle(fontSize: 30),
+      )),
+    );
+  }
+}
+
+//Exemple สำหรับการสร้าง class CustomSearchDelegate
+class CustomSearchDelegate extends SearchDelegate {
+  //05. create class and extends SearhDelegate and create method overide 4 method
+
+  List<String> list = ["bbb", "ccc", "cca", "bbbbe", "eee", "dddd"]; // list
+
+  @override
+  List<Widget>? buildActions(BuildContext context) {
+    //06.method สำหรับระบุปุ่ม Action ด้านขวาสามารถระบุได้หลายปุ่ม
+    return [
+      IconButton(
+          onPressed: () => query = "",
+          icon: Icon(Icons.close)) // delete value search
+    ]; //
+  }
+
+  @override
+  Widget? buildLeading(BuildContext context) {
+    //06.method สำหรับระบุปุ่ม Action ด้านซ้าย
+    return IconButton(
+      onPressed: () => close(context, null), //close view search
+      icon: Icon(Icons.arrow_back),
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    //method สำหรับการ filter search building
+    List<String> listMap = list
+        .where((value) => value.toLowerCase().contains(query.toLowerCase()))
+        .toList(); //filter list
+
+    return ListView.builder(
+      // builder widget
+      itemBuilder: (context, index) {
+        String value = listMap[index];
+        return ListTile(
+          title: Text(value),
+          leading: Icon(Icons.abc),
+        );
+      },
+      itemCount: listMap.length,
+    );
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    //method สำหรับการ first filter search
+    List<String> listMap = list
+        .where((value) => value.toLowerCase().contains(query.toLowerCase()))
+        .toList(); //search filter
+
+    return ListView.builder(
+      //builder widget
+      itemBuilder: (context, index) {
+        String value = listMap[index];
+        return ListTile(
+          title: Text(value),
+          leading: Icon(Icons.abc),
+        );
+      },
+      itemCount: listMap.length,
+    );
+  }
+}

@@ -1,0 +1,97 @@
+class MyListWhellScrollView extends StatefulWidget {
+  const MyListWhellScrollView({super.key});
+
+  @override
+  State<MyListWhellScrollView> createState() => _MyListWhellScrollViewState();
+}
+
+class _MyListWhellScrollViewState extends State<MyListWhellScrollView> {
+  var select_item = 0;
+
+  late FixedExtentScrollController
+      _controller; // create Controller ของ List Whell Scroll View | ถ้าต้องการใช้ controller ต้อง initial ด้วยโอเคมั้ย อิอิ
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _controller =
+        FixedExtentScrollController(); //initial ค่าให้กับ Controller  | controller เอาใว้ผูกการทำงานคล้าย ngModel in angular
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: ListWheelScrollView.useDelegate(
+          // List Whell Scroll View
+          itemExtent: 50, //ความสูงของ Item
+          perspective: 0.005, //ความโค้งแนวตั้ง
+          diameterRatio: 1.2, //ความห่างแต่ละ item
+          physics:
+              FixedExtentScrollPhysics(), //set ค่าให้การเลื่อนลงตัวพอดี มไ่อยู่ระหว่างกลาง
+          controller: _controller, //ผูก Controller
+          onSelectedItemChanged: (value) {
+            // Event เวลา มีการเลื่อน อิอิ
+            print(_controller.selectedItem);
+            setState(() {
+              select_item = value;
+            });
+          },
+          childDelegate: ListWheelChildBuilderDelegate(
+              // builder Widget
+              childCount: 40, //จำนวน item อิอิ
+              builder: (context, index) {
+                return Container(
+                  color: index == select_item ? Colors.red : Colors.green[300],
+                  child: Center(child: Text("$index")),
+                );
+              })),
+    );
+  }
+}
+
+class MyListWhellViewScrollExemple extends StatelessWidget {
+  const MyListWhellViewScrollExemple({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: ListWheelScrollView(
+        // create List Whell Scroll View
+        itemExtent: 50, // ความสูงของ Item
+        perspective: 0.005, //ความโค้งแนวตั้ง
+        diameterRatio: 1.2, //ความห่างแต่ละ item
+        children: [
+          Container(
+            color: Colors.blue,
+            child: Center(child: Text("Hello")),
+          ),
+          Container(
+            color: Colors.blue,
+            child: Center(child: Text("Hello")),
+          ),
+          Container(
+            color: Colors.blue,
+            child: Center(child: Text("Hello")),
+          ),
+          Container(
+            color: Colors.blue,
+            child: Center(child: Text("Hello")),
+          ),
+          Container(
+            color: Colors.blue,
+            child: Center(child: Text("Hello")),
+          ),
+          Container(
+            color: Colors.blue,
+            child: Center(child: Text("Hello")),
+          ),
+          Container(
+            color: Colors.blue,
+            child: Center(child: Text("Hello")),
+          ),
+        ],
+      ),
+    );
+  }
+}

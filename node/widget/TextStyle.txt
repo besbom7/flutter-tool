@@ -1,0 +1,34 @@
+class MyText extends StatelessWidget {
+  const MyText({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+        title: "Text",
+        theme: ThemeData(
+            primarySwatch: Colors.green,
+            textTheme: TextTheme(
+                bodyText2: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold))), //กำหนด default text style
+        home: Scaffold(
+          appBar: AppBar(title: Text("Detail Text")),
+          body: Center(
+            child:
+                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+              Text(
+                "My Text 1",
+                style: TextStyle(color: Colors.red), //Edit style text
+              ),
+              SizedBox(
+                height: 30,
+              ),
+              Text(
+                "My Text 2",
+                style: TextStyle(color: Colors.green), //Edit style text
+              )
+            ]),
+          ),
+        ));
+  }
+}

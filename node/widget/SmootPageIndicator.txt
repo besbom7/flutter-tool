@@ -1,0 +1,81 @@
+
+//01.install (flutter pub add smooth_page_indicator)
+
+class MySmootPageIndicator extends StatefulWidget {
+  const MySmootPageIndicator({super.key});
+
+  @override
+  State<MySmootPageIndicator> createState() => _MySmootPageIndicatorState();
+}
+
+class _MySmootPageIndicatorState extends State<MySmootPageIndicator> {
+  //Create Controller PageView
+  final _controller = PageController();
+
+//Generate page for test smootPageindicator
+  final page = List.generate(5, (index) {
+    return Scaffold(
+      body: Padding(
+        padding: EdgeInsets.all(40),
+        child: Container(
+          child: Center(
+              child: Text(
+            "Page $index",
+            style: TextStyle(color: Colors.white, fontSize: 40),
+          )),
+          color: Colors.lightBlue[900],
+        ),
+      ),
+    );
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+          child: Column(
+        children: [
+          Expanded(
+              //create PageView for use smoothPageIndicator
+              child: PageView.builder(
+                  //กำหนด controller ใช้ controller นี้ร่วมกับ controller ของ smoothPageIndicator ด้วย
+                  controller: _controller,
+                  //set count page view
+                  itemCount: page.length,
+                  //builder page view
+                  itemBuilder: (_, index) {
+                    //return page generate
+                    return page[index];
+                  })),
+          Padding(
+            padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
+            //create smoothpageindicator
+            child: SmoothPageIndicator(
+              //กำหนด controller ใช้ controller ร่วมกันกับของ PageView
+              controller: _controller,
+              //กำหนดจำนวน page or amount dot
+              count: page.length,
+              //กำหนด effect ว่าจะใช้ effect แบบใหนโดยจะมีให้เลือก 3 แบบโดยประมาณ 1.JumpingDotEffect 2.SwapEffect 3.ExpandingDotsEffect
+              effect: JumpingDotEffect(
+                //กำหนด color ของ dot active
+                activeDotColor: Color.fromARGB(255, 236, 1, 1),
+                //กำหนด color ของ dot not active
+                dotColor: Color.fromARGB(255, 255, 179, 179),
+                //กำหนด ขนาดของ dot
+                dotWidth: 30,
+                //กำหนด ขนาดของ dot
+                dotHeight: 30,
+                //กำหนดระยะห่างของ dot
+                spacing: 20,
+                //กำหนดขนาดการ jump ของ dot ใช้เฉพาะ effect แบบ JumpingDotEffect
+                jumpScale: 2,
+                //กำหนดขนาดการ jump ของ dot ใช้เฉพาะ effect แบบ JumpingDotEffect
+                verticalOffset: 10,
+              ),
+            ),
+          )
+        ],
+      )),
+    );
+  }
+}

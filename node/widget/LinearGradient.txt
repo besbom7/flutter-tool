@@ -1,0 +1,38 @@
+
+//การไล่และผสมเฉดสีครับ
+
+class MyLinearGradient extends StatelessWidget {
+  const MyLinearGradient({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: Center(
+      child: Container(
+        width: 300,
+        height: 300,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(30)),
+          gradient: LinearGradient(
+            // Create LinearGradient
+            begin: Alignment
+                .topLeft, //กำหนดการเริ่มต้นของการไล่สี default is top center
+            end: Alignment
+                .bottomRight, //กำหนดจุดสิ้นสุดของการไล่สี default is bottom center
+            colors: [
+              //กำหนดสีที่จะทำการไล่
+              Color.fromARGB(187, 71, 2, 124),
+              Color.fromARGB(186, 15, 23, 113),
+              Color.fromARGB(184, 0, 30, 223)
+            ],
+          ),
+        ),
+        child: Text(
+          "LinearGradient",
+          style: TextStyle(fontSize: 30, color: Colors.white),
+        ),
+        alignment: Alignment.center,
+      ),
+    ));
+  }
+}

@@ -1,0 +1,67 @@
+
+class MyAutocomplete extends StatefulWidget {
+  const MyAutocomplete({super.key});
+
+  @override
+  State<MyAutocomplete> createState() => _MyAutocompleteState();
+}
+
+class _MyAutocompleteState extends State<MyAutocomplete> {
+  //list string
+  List<String> listItem = ["banana", "apple", "coconut", "apend"];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        //use widget auto complate
+        child: Autocomplete<String>(
+          //bulider item in list for list auto complate
+          optionsBuilder: (textEditingValue) {
+            if (textEditingValue == "") {
+              return Iterable.empty();
+            }
+            //filter list in text value คือ textEditingValue.text
+            return listItem.where((item) {
+              return item.contains(textEditingValue.text.toLowerCase());
+            });
+          },
+          onSelected: (item) {
+            //event for selected
+            print("select ${item}");
+          },
+          displayStringForOption: (option) {
+            //change string in option เหมือน cellRender in angular (grid)
+            return "option ${option}";
+          },
+          //custom input auto complate เพื่ออยาก custom นะ
+          fieldViewBuilder: (BuildContext context,
+              TextEditingController textEditingController, //text controller จะไปเชื่อมกับ textEditingValue ของ Auto complate
+              FocusNode focusNode, // focusnote ตือ รายการ list ของ auto complate
+              VoidCallback onFieldSubmitted) {
+            return TextFormField(
+              //ผูก controller 
+              controller: textEditingController,
+              //ผูก focusNode for show list in item list
+              focusNode: focusNode,
+              //สร้าง function onFildSubmitted เพื่อ สามากด Enter เพื่อเลือกรายการได้ หรือ กด คลิ๊ก
+              onFieldSubmitted: (String value) {
+                onFieldSubmitted();
+                print("submited $value");
+              },
+              //ปรับ แต่ง style ของ input ปกติ
+              decoration: InputDecoration(
+                  hintText: "autocomplate",
+                  filled : true,
+                  fillColor: Colors.green[100],
+                  prefixIcon: Icon(Icons.auto_awesome),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10))),
+            );
+          },
+        ),
+      ),
+    );
+  }
+}

@@ -1,0 +1,61 @@
+//01. install (flutter pub add google_nav_bar)
+
+class MyGnavBar extends StatefulWidget {
+  const MyGnavBar({super.key});
+
+  @override
+  State<MyGnavBar> createState() => _MyGnavBarState();
+}
+
+class _MyGnavBarState extends State<MyGnavBar> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      bottomNavigationBar: Container(
+        color: Colors.black,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+          //create GNav Bar button
+          child: GNav(
+            //กำหนดรยะห่าง icon and text
+            gap: 8,
+            //set font and icon color
+            color: Colors.white,
+            //set background color
+            backgroundColor: Colors.black,
+            //set color icon and text active
+            activeColor: Colors.white,
+            //set background color active
+            tabBackgroundColor: Colors.grey.shade800,
+            //set padding
+            padding: EdgeInsets.all(16),
+            //fuction on change tab
+            onTabChange: (index) {
+              print(index);
+            },
+            //create list tab bottom
+            tabs: [
+              //crate button GButton
+              GButton(
+                icon: Icons.home,
+                text: "home",
+              ),
+              GButton(
+                icon: Icons.face,
+                text: "child",
+              ),
+              GButton(
+                icon: Icons.phone_android,
+                text: "phone",
+              ),
+              GButton(
+                icon: Icons.camera,
+                text: "camera",
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

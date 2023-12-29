@@ -1,0 +1,238 @@
+class MyAlertDialog extends StatefulWidget {
+  const MyAlertDialog({super.key});
+
+  @override
+  State<MyAlertDialog> createState() => _MyAlertDialogState();
+}
+
+class _MyAlertDialogState extends State<MyAlertDialog> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("My Alert Dialog")),
+      body: Center(
+        child: TextButton(
+          onPressed: () {
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: Text("Hello title"),
+                    content: Text("my content in alert dialog"),
+                    actions: [
+                      TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text("ok")),
+                      TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text("cancle")),
+                    ],
+                  );
+                });
+          },
+          child: Text("show Alert Dialog"),
+        ),
+      ),
+    );
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//กรณีนี้มีการใช้ Widget ใน Content ของ AlertDialog เลยทำให้ widget Column ถูกขยายเต็มพื้นที่แบบอัตโนมัติ วิธีแก้คือ
+01.ใช่การกำหนกคุณสมบัติ mainAxisSize: MainAxisSize.min ภายใน Column เพื่อที่จะทำให้ตัว Column มีขนาดตามข้อมูลที่มี
+02.ใช่การกำหนกคุณสมบัติ mainAxisSize: MainAxisSize.min ภายใน Column เพื่อที่จะทำให้ตัว Column มีขนาดเต็มพื้นที่ (default);
+
+
+class MyAlertDialog extends StatefulWidget {
+  const MyAlertDialog({super.key});
+
+  @override
+  State<MyAlertDialog> createState() => _MyAlertDialogState();
+}
+
+class _MyAlertDialogState extends State<MyAlertDialog> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("My Alert Dialog")),
+      body: Center(
+        child: TextButton(
+          onPressed: () {
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: Text("Hello title"),
+                    content: Container(
+                      child: Column(mainAxisSize: MainAxisSize.min, children: [
+                        TextField(
+                          decoration: InputDecoration(label: Text("userName")),
+                        ),
+                        TextField(
+                            decoration: InputDecoration(
+                              label: Text("password"),
+                            ),
+                            obscureText: true)
+                      ]),
+                    ),
+                    actions: [
+                      TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text("ok")),
+                      TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text("cancle")),
+                    ],
+                  );
+                });
+          },
+          child: Text("show Alert Dialog"),
+        ),
+      ),
+    );
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class MyDialog extends StatefulWidget {
+  const MyDialog({super.key});
+
+  @override
+  State<MyDialog> createState() => _MyDialogState();
+}
+
+class _MyDialogState extends State<MyDialog> {
+  void showDialog1() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            backgroundColor: Colors.green[200],
+            title: Text("title"),
+            content: Text("content detail"),
+            actions: [
+              MaterialButton(
+                onPressed: () {},
+                child: Text("OK"),
+              ),
+              MaterialButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text("CANCEL"),
+              ),
+            ],
+          );
+        });
+  }
+
+  void showDialog2() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return CupertinoAlertDialog(
+            title: Text("title"),
+            content: Text("content and detail"),
+            actions: [
+              MaterialButton(
+                onPressed: () {},
+                child: Text("OK"),
+              ),
+              MaterialButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text("CANCEL"),
+              ),
+            ],
+          );
+        });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(title: Text("my Dialog")),
+        body: Center(
+            child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            MaterialButton(
+              onPressed: () => showDialog1(),
+              child: Text("show Dialog 1"),
+            ),
+            MaterialButton(
+              onPressed: () => showDialog2(),
+              child: Text("show Dialog 2"),
+            )
+          ],
+        )));
+  }
+}

@@ -1,0 +1,42 @@
+//แก้ไขปัญหาการต่อ Text และ Text เกินหน้าจอ
+class MyRichText extends StatelessWidget {
+  const MyRichText({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("My Rich Text")),
+      body: Center(
+          child: Column(
+        children: [
+          Row(
+            children: [
+              Text(
+                "MyText",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              Text(
+                  "detail texttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt")
+            ],
+          ),
+          SizedBox(
+            height: 30,
+          ),
+          RichText( //แก้ไขปัญหาการต่อ Text และ Text เกินหน้าจอ
+            text: TextSpan(
+              style: TextStyle(color: Colors.black),
+              children: [
+                TextSpan(
+                    text: "MyText",
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+                TextSpan(
+                    text:
+                        "detail texttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt")
+              ],
+            ),
+          )
+        ],
+      )),
+    );
+  }
+}

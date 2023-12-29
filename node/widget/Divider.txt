@@ -1,0 +1,41 @@
+//เส้นขั้นกลางเพื่อเว้นระยะห่าง
+
+class MyDivider extends StatelessWidget {
+  const MyDivider({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Column(children: [
+        Expanded(
+          child: Container(
+            width: double.infinity,
+            color: Colors.red[400],
+            child: Text(""),
+          ),
+        ),
+        Divider(
+          height: 20, //ขนากระยะห่าง
+          thickness: 2, //ความหนาของเส้น
+          color: Colors.orange[300], //สีของเส้น
+          indent: 40, //ระยะห่างทางด้านซ้าย padding left
+          endIndent: 40, //ระยะห่างทางด้านซ้าย padding right
+        ),
+        Divider(
+          height: 20,
+          thickness: 2,
+          color: Colors.blue[300],
+          indent: 40,
+          endIndent: 40,
+        ),
+        Expanded(
+          child: Container(
+            width: double.infinity,
+            color: Colors.green[400],
+            child: Text(""),
+          ),
+        )
+      ]),
+    );
+  }
+}

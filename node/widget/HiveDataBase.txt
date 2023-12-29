@@ -1,0 +1,107 @@
+import 'dart:convert';
+import 'dart:ffi';
+import 'dart:io';
+import 'dart:math';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
+import 'package:test/model/model_test.dart';
+import 'package:test/page/detail_item.dart';
+import 'package:test/page/page2.dart';
+import './component/ContainerBox.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
+import './core/loading.dart';
+import 'package:provider/provider.dart';
+import 'package:nice_buttons/nice_buttons.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+
+import 'package:webview_flutter/webview_flutter.dart';
+// #docregion platform_imports
+// Import for Android features.
+import 'package:webview_flutter_android/webview_flutter_android.dart';
+// Import for iOS features.
+import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
+// #enddocregion platform_imports
+
+void main() async {
+  await Hive.initFlutter();
+  await Hive.openBox("local");
+  await Hive.openBox("global");
+  runApp(MyAppHive());
+}
+
+class MyAppHive extends StatelessWidget {
+  const MyAppHive({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(title: "My Hive", home: MyHive());
+  }
+}
+
+class MyHive extends StatefulWidget {
+  const MyHive({super.key});
+
+  @override
+  State<MyHive> createState() => _MyHiveState();
+}
+
+class _MyHiveState extends State<MyHive> {
+  var number;
+
+  getNumber() async {
+    var global = await Hive.box("global");
+    setState(() {
+      number = global.get("number");
+    });
+  }
+
+  addNumberMemory() async {
+    var global = await Hive.box("global");
+    var numberString = global.get("number");
+    var numberInt = 0;
+    if (numberString != null) {
+      numberInt = int.parse(numberString);
+      numberInt += 1;
+      global.put("number", numberInt.toString());
+    } else {
+      global.put("number", "0");
+    }
+    getNumber();
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getNumber();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(title: Text("My Hive")),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "$number",
+                  style: TextStyle(fontSize: 40, color: Colors.green),
+                ),
+              ],
+            ),
+            TextButton(
+                onPressed: () {
+                  addNumberMemory();
+                },
+                child: Text("add number in memory"))
+          ],
+        ));
+  }
+}

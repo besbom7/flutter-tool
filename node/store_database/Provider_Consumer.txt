@@ -1,0 +1,193 @@
+import 'dart:convert';
+import 'dart:math';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:test/page/page2.dart';
+import './component/ContainerBox.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
+import './core/loading.dart';
+import 'package:provider/provider.dart';
+import 'package:nice_buttons/nice_buttons.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) {
+          return TransectionProvider();
+        })
+      ],
+      child: MaterialApp(title: "home page", home: MyHome()),
+    );
+  }
+}
+
+class MyHome extends StatefulWidget {
+  const MyHome({super.key});
+
+  @override
+  State<MyHome> createState() => _MyHomeState();
+}
+
+class _MyHomeState extends State<MyHome> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: Text("home page"),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return PageDetail();
+                  }));
+                },
+                icon: Icon(Icons.add))
+          ],
+        ),
+        body: Consumer(builder: (context, TransectionProvider provider, _) {
+          return ListView.builder(
+              itemCount: provider.getMenu().length,
+              itemBuilder: (context, index) {
+                List<Menu> listMenu1 =
+                    context.watch<TransectionProvider>().getMenu();
+                List<Menu> listMenu2 = provider.getMenu();
+                Menu item = listMenu2[index];
+                return Card(
+                  elevation: 7,
+                  margin: EdgeInsets.symmetric(vertical: 7, horizontal: 10),
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      backgroundColor: Colors.green,
+                      radius: 30,
+                      child: FittedBox(
+                        child: Text(
+                          "${item.title}",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                    title: Text("${item.amount}"),
+                    subtitle: Text("${item.date}"),
+                  ),
+                );
+              });
+        }));
+  }
+}
+
+//Page Detail
+
+class PageDetail extends StatelessWidget {
+  final controllerTitle = TextEditingController();
+  final controllerAmount = TextEditingController();
+  final formKey = GlobalKey<FormState>();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Page Detail")),
+      body: Form(
+        key: formKey,
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            children: [
+              CircleAvatar(
+                radius: 70,
+                backgroundColor: Colors.brown.shade800,
+                child: Text('AH1'),
+              ),
+              TextFormField(
+                decoration: InputDecoration(label: Text("title")),
+                autofocus: true,
+                controller: controllerTitle,
+                validator: (var str) {
+                  if (str.toString().isEmpty) {
+                    return "title is null";
+                  }
+                  return null;
+                },
+              ),
+              Container(
+                margin: EdgeInsets.fromLTRB(0, 15, 0, 0),
+                child: TextFormField(
+                  decoration: InputDecoration(
+                    label: Text('amount'),
+                  ),
+                  keyboardType: TextInputType.number,
+                  controller: controllerAmount,
+                  validator: (var str) {
+                    if (str.toString().isEmpty) {
+                      return "amount is null";
+                    }
+
+                    if (double.parse(str.toString()) < 0) {
+                      return "amount < 0";
+                    }
+
+                    return null;
+                  },
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
+                child: NiceButtons(
+                  stretch: false,
+                  startColor: Color.fromARGB(255, 0, 83, 156),
+                  endColor: Color.fromARGB(255, 0, 19, 230),
+                  borderRadius: 30,
+                  gradientOrientation: GradientOrientation.Horizontal,
+                  onTap: (finish) {
+                    if (formKey.currentState!.validate()) {
+                      var provider = Provider.of<TransectionProvider>(context,
+                          listen: false);
+                      provider.addMenu(Menu(controllerTitle.text,
+                          controllerAmount.text, DateTime.now()));
+                      Navigator.pop(context);
+                    }
+                  },
+                  child: Text(
+                    'Submit',
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class TransectionProvider with ChangeNotifier {
+  List<Menu> listMenu = [
+    Menu("title1", 500, DateTime.now()),
+    Menu("title2", 600, DateTime.now()),
+  ];
+
+  List<Menu> getMenu() => listMenu;
+
+  void addMenu(Menu m) {
+    listMenu.add(m);
+
+    //แจ้งเตือน Consumer เพิ่ม reload Widget
+    notifyListeners();
+  }
+}
+
+class Menu {
+  var title;
+  var amount;
+  DateTime date;
+  Menu(this.title, this.amount, this.date);
+}

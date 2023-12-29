@@ -1,0 +1,61 @@
+import 'package:flutter/material.dart';
+import './component/ContainerBox.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: "basic Container",
+      home: MyContainer(),
+      theme: ThemeData(primaryColor: Colors.orange),
+    );
+  }
+}
+
+class MyContainer extends StatefulWidget {
+  const MyContainer({super.key});
+
+  @override
+  State<MyContainer> createState() => _MyContainerState();
+}
+
+class _MyContainerState extends State<MyContainer> {
+  _MyContainerState() {
+    genListContainer();
+  }
+
+  List<Widget> listContainer = [];
+  var list = [
+    {"title": "รายการที่1", "value": "50000"},
+    {"title": "รายการที่2", "value": "45000"},
+    {"title": "รายการที่2", "value": "45000"},
+    {"title": "รายการที่2", "value": "45000"},
+    {"title": "รายการที่2", "value": "45000"},
+    {"title": "รายการที่2", "value": "45000"},
+    {"title": "รายการที่3", "value": "13000"}
+  ];
+  void genListContainer() {
+    for (var data in list) {
+      listContainer.add(ContainerBox(data['title'], data['value']));
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Basic container')),
+      body: Padding(
+        padding: EdgeInsets.all(10),
+        child: ListView(
+          children: listContainer,
+        ),
+      ),
+    );
+  }
+}

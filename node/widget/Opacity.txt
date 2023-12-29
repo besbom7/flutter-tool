@@ -1,0 +1,37 @@
+class MyOpacity extends StatefulWidget {
+  const MyOpacity({super.key});
+
+  @override
+  State<MyOpacity> createState() => _MyOpacityState();
+}
+
+class _MyOpacityState extends State<MyOpacity> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("opacity")),
+      body: Column(
+        children: [
+          Container(
+            child: AnimatedOpacity(
+              duration: Duration(seconds: 3),
+              opacity: 0.2,
+              child: Image.network(
+                  'https://images.unsplash.com/photo-1680352960642-d701eb58323d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1171&q=80'),
+            ),
+          ),
+          SizedBox(
+            height: 50,
+          ),
+          Container(
+            child: Opacity(
+              opacity: 0.5,
+              child: Image.network(
+                  'https://images.unsplash.com/photo-1680352960642-d701eb58323d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1171&q=80'),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}

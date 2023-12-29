@@ -1,0 +1,63 @@
+01. //install webview
+dependencies:
+  webview_flutter: ^4.0.7
+
+02. //implement
+
+import 'package:webview_flutter/webview_flutter.dart';
+// #docregion platform_imports
+// Import for Android features.
+import 'package:webview_flutter_android/webview_flutter_android.dart';
+// Import for iOS features.
+import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
+// #enddocregion platform_imports
+
+
+03. //setSdk min 19
+
+
+
+class MyWebView extends StatefulWidget {
+  const MyWebView({super.key});
+
+  @override
+  State<MyWebView> createState() => _MyWebViewState();
+}
+
+class _MyWebViewState extends State<MyWebView> {
+  late final WebViewController _controller;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    late final PlatformWebViewControllerCreationParams params;
+    if (WebViewPlatform.instance is WebKitWebViewPlatform) {
+      params = WebKitWebViewControllerCreationParams(
+        allowsInlineMediaPlayback: false,
+        mediaTypesRequiringUserAction: const <PlaybackMediaTypes>{},
+      );
+    } else {
+      params = const PlatformWebViewControllerCreationParams();
+    }
+
+    final WebViewController controller =
+        WebViewController.fromPlatformCreationParams(params);
+    // #enddocregion platform_features
+
+    controller
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..loadRequest(Uri.parse('https://www.youtube.com/watch?v=i0cWsRen1uE'));
+
+    _controller = controller;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("web view")),
+      body: WebViewWidget(controller: _controller),
+    );
+  }
+}

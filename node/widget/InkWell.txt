@@ -1,0 +1,61 @@
+//InkWell ใช้สำหรับการใช้ความแตกต่างในการ Tab ต่างๆ และใช้ในการเปลี่ยนสีในการ Tab อีกด้วย
+
+class MyInkWell extends StatefulWidget {
+  const MyInkWell({super.key});
+
+  @override
+  State<MyInkWell> createState() => _MyInkWellState();
+}
+
+class _MyInkWellState extends State<MyInkWell> {
+  Text text = Text("");
+  Color color = Colors.blue;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("InkWell")),
+      body: Center(
+        child: InkWell(
+          splashColor: Colors.black, //สีเวลากด Animation เวลากด Tab
+          highlightColor: Colors.pink, //สีเวลา hilgh หรือ กด click
+          onTap: () {
+            //event nomal click
+            setState(() {
+              text = Text("onTap");
+              color = Colors.orange;
+            });
+          },
+          onDoubleTap: () {
+            //event double click
+            setState(() {
+              text = Text("onDoubleTap");
+              color = Colors.green;
+            });
+          },
+          onTapCancel: () {
+            //event clacle click
+            setState(() {
+              text = Text("onTapCancel");
+              color = Colors.red;
+            });
+          },
+          onLongPress: () {
+            //event เวลากดค้าง
+            setState(() {
+              text = Text("onLongPress");
+              color = Colors.grey;
+            });
+          },
+          child: Ink(
+            //ลูกของ InkWell
+            width: 200,
+            height: 200,
+            color: color,
+            child: Center(child: text),
+          ),
+        ),
+      ),
+    );
+  }
+}

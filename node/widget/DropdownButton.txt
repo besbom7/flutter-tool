@@ -1,0 +1,49 @@
+List<String> list = ["A", "B", "C", "D", "E", "F", "G", "H", "I"];
+
+class MyDropdownButton extends StatefulWidget {
+  const MyDropdownButton({super.key});
+
+  @override
+  State<MyDropdownButton> createState() => _MyDropdownButtonState();
+}
+
+class _MyDropdownButtonState extends State<MyDropdownButton> {
+  String dropdownValue = list.first;
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("DropdownButton")),
+      body: Center(
+        child: Container(
+          padding: EdgeInsets.all(40),
+          child: DropdownButton(
+            value: dropdownValue, // ผูก value
+            elevation: 3, //ปรับความเข้สของเงา ไม่จำเป็น
+            icon: Icon(Icons.arrow_downward), // set icon ไม่จำเป็น
+            iconEnabledColor: Colors.orange, //สีั icon ตอน Enable ไม่จำเป็น
+            iconDisabledColor: Colors.blue, //สี icon ตอน Disable ไม่จำเป็น
+            hint: Text("placeholder"), // placehlder
+            iconSize: 30, // icon size
+            underline: Container(
+                height: 0.5,vb 
+                color: Colors.green), // custom widget ด้านล่าง ไม่จำเป็น
+            style: TextStyle(
+                color: Colors.red,
+                fontWeight: FontWeight.bold), // text Style ไม่จำเป็น
+            isExpanded: true, //ขยายให้เต็ม is ture
+            onChanged: (var value) {
+              // event change value ถ้าจะให้ disabled ให้กำหนดค่านี้เป็น null
+              setState(() {
+                dropdownValue = value!;
+              });
+            },
+            items: list.map((value) {
+              //รายการ list selected  ถ้าจะให้ disabled ให้กำหนดค่านี้เป็น null
+              return DropdownMenuItem(child: Text(value), value: value);
+            }).toList(),
+          ),
+        ),
+      ),
+    );
+  }
+}

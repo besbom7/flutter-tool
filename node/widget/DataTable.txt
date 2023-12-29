@@ -1,0 +1,143 @@
+class MyDataTable extends StatefulWidget {
+  const MyDataTable({super.key});
+
+  @override
+  State<MyDataTable> createState() => _MyDataTableState();
+}
+
+class _MyDataTableState extends State<MyDataTable> { //data exemple
+  List<DataRowExemple> rowData = [
+    DataRowExemple("01", "name1", 10),
+    DataRowExemple("02", "name2", 11),
+    DataRowExemple("03", "name3", 45),
+    DataRowExemple("04", "name4", 34),
+    DataRowExemple("05", "name5", 89),
+    DataRowExemple("06", "name6", 46),
+    DataRowExemple("07", "name7", 53),
+    DataRowExemple("01", "name1", 10),
+    DataRowExemple("02", "name2", 11),
+    DataRowExemple("03", "name3", 45),
+    DataRowExemple("04", "name4", 34),
+    DataRowExemple("05", "name5", 89),
+    DataRowExemple("06", "name6", 46),
+    DataRowExemple("07", "name7", 53),
+    DataRowExemple("01", "name1", 10),
+    DataRowExemple("02", "name2", 11),
+    DataRowExemple("03", "name3", 45),
+    DataRowExemple("04", "name4", 34),
+    DataRowExemple("05", "name5", 89),
+    DataRowExemple("06", "name6", 46),
+    DataRowExemple("07", "name7", 53),
+  ];
+
+  var rowDataSelected = []; //row selected 
+
+  var listColumn = ["id", "name", "age"]; //field column
+
+  var valueController = TextEditingController(); //value controller for edit valin in table
+  void EditRowData(DataRowExemple data) { //function Edit row data in table
+    setState(() {
+      valueController.text = data.NAME; //set data name from table to value controller
+    });
+    showDialog( //showDialog for Edit
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("editData"),
+            content: Column(mainAxisSize: MainAxisSize.min, children: [
+              TextFormField(
+                autofocus: true,
+                controller: valueController,
+              )
+            ]),
+            actions: [
+              MaterialButton(
+                onPressed: () {
+                  rowData.map((d) {
+                    if (d.ID == data.ID) {
+                      d.NAME = valueController.text;
+                    }
+                    return data;
+                  }).toList();
+                  setState(() {});
+                  Navigator.pop(context);
+                },
+                child: Text("OK"),
+              ),
+            ],
+          );
+        });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Data Table Exemple")),
+      body: Container(
+        child: Column(children: [
+          Expanded(
+            child: SingleChildScrollView( //ใช้เพื่อให้สามรถเลื่อน table ไปทางซ้ายขวาด้ายถ้าใช้ table ต้องคอบด้วยตัวนี้เพิ่ม
+              scrollDirection: Axis.horizontal, //กำหนดให้ scroll ซ้ายขวา
+              child: SingleChildScrollView( //ใช้เพื่อให้สามรถเลื่อน table ไปทางด้ายล่างถ้าใช้ table ต้องคอบด้วยตัวนี้เพิ่ม
+                scrollDirection: Axis.vertical, //กำหนดให้ scroll บย ล่าง
+                child: DataTable( // Create Table
+                  // onSelectAll: (isSelectAll) { // ใช้กรณีอยาก custom select all in table
+                  //   isSelectAll!
+                  //       ? rowDataSelected = rowData
+                  //       : rowDataSelected = [];
+                  //   setState(() {});
+                  // },
+                  columns: listColumn.map((col) { //set Column โดยการเอา listCoumn มาวนสร้าง column
+                    return DataColumn(label: Text(col));
+                  }).toList(),
+                  rows: rowData.map((row) { //set Rows โดยการเอา rowData มาวนสร้าง row data
+                    return DataRow(
+                        selected: rowDataSelected.contains(row), //กำหนด row selected , ture , false | ต้องใช้คู่กับ onSelectChanged
+                        onSelectChanged: (selected) { //Event select row | set row select เข้าไปใน rowDataSelected
+                          selected!
+                              ? rowDataSelected.add(row)
+                              : rowDataSelected.remove(row);
+                          setState(() {});
+                        },
+                        cells: [ //กำหนด cells ของ row Data ต้องกดหนดให้ตรงกับ column
+                          DataCell(Text(row.ID),  //set value in row column
+                          showEditIcon: true, //set ให้ column นี้มีปุ่ม Edit
+                          onTap: () { //เมื่อ click ให้ทำอะไร
+                            EditRowData(row);
+                          }),
+                          DataCell(Container(
+                            child: Text(row.NAME), //set value in row column
+                            width: 150, //set width in row datat column ถ้าไม่ set จะยาวตามขนาดของข้อมูล
+                          )),
+                          DataCell(Container(
+                            child: Text("${row.AGE}"), //set value in row column
+                            width: 150, //set width in row datat column ถ้าไม่ set จะยาวตามขนาดของข้อมูล
+                          ))
+                        ]);
+                  }).toList(),
+                ),
+              ),
+            ),
+          ),
+          Center(
+            child: MaterialButton(
+              onPressed: () {},
+              child: Container(
+                  width: double.infinity,
+                  child: Center(
+                      child: Text("select ${rowDataSelected.length} item"))),
+              color: Colors.orange,
+            ),
+          )
+        ]),
+      ),
+    );
+  }
+}
+
+class DataRowExemple { //class exemple for test row data
+  var ID;
+  var NAME;
+  var AGE;
+  DataRowExemple(this.ID, this.NAME, this.AGE);
+}

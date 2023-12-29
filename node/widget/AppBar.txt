@@ -1,0 +1,30 @@
+class MyAppBar extends StatelessWidget {
+  const MyAppBar({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("My AppBar"),
+        backgroundColor: Colors.green,
+        elevation: 7, // เงา AppBar
+        leading: IconButton(
+          // left menu
+          onPressed: () {},
+          icon: Icon(Icons.menu),
+        ),
+        actions: [
+          // action button
+          IconButton(
+            onPressed: () {},
+            icon: Icon(Icons.add),
+          ),
+          IconButton(
+            onPressed: () {},
+            icon: Icon(Icons.delete),
+          ),
+        ],
+      ),
+    );
+  }
+}

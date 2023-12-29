@@ -1,0 +1,44 @@
+//เช็คตำแหน่งที่จิ้มบนหน้าจอ
+
+
+class MyGestureDetectorMediaQuery extends StatefulWidget {
+  const MyGestureDetectorMediaQuery({super.key});
+
+  @override
+  State<MyGestureDetectorMediaQuery> createState() =>
+      _MyGestureDetectorMediaQueryState();
+}
+
+class _MyGestureDetectorMediaQueryState
+    extends State<MyGestureDetectorMediaQuery> {
+  var value = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: GestureDetector(
+          onTapDown: (detail) {
+            var width_screen =
+                MediaQuery.of(context).size.width; //ดึงข้อมูล ความกว้างหน้าจอ
+            var position =
+                detail.globalPosition.dx; //ดึงตำแหน่งที่จิ้มลงบนหน้าจอ
+            setState(() {
+              if (position < (width_screen / 2)) {
+                value = true;
+              } else {
+                value = false;
+              }
+            });
+          },
+          child: Container(
+            color: Colors.orange[100],
+            child: Center(
+              child: Text(
+                value ? "Left" : "Right",
+                style: TextStyle(fontSize: 51),
+              ),
+            ),
+          )),
+    );
+  }
+}

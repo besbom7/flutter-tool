@@ -1,0 +1,193 @@
+import 'dart:convert';
+
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:provider/provider.dart';
+
+void main() async {
+  //initial Firebase จำเป็นต้องระบบุอันนี้ถ้าต้องการใช้ async await ใน main function
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(); //initial Firebase
+  await FirebaseApi().initNotification(); //init notification
+  runApp(MyApp());
+}
+
+//01.ทำการ register and inatall firebase ก่อนเลย สามารถดูวิธีการเริ่มแรกได้ที่ D:\PROGRAMMING\Learn Flutter\test\node\firebase\getStartedFireBase.txt
+//02.install ( flutter pub add firebase_messaging )
+//03.ปรับ minSdk ของ Android เป็น 19 ใน  D:\PROGRAMMING\Learn Flutter\test\android\app\build.gradle
+//04.ทำการศึกษาการทำงานและ install local_notification สำหรับใช้การแจ้งเตื่อนแบบเบื้องหน้า จาก D:\PROGRAMMING\Learn Flutter\test\node\widget\LocalNotification.txt
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        body: Center(child: Text("push notification")),
+      ),
+    );
+  }
+}
+
+//สร้าง function สำหรับรับข้อมูลเวลาที่มรการแจ้งเตือนในส่วนของ background
+Future<void> handleBackgroundMessage(RemoteMessage message) async {
+  //data title
+  print("title : ${message.notification?.title}");
+  //data body
+  print("title : ${message.notification?.body}");
+  //data body in playload
+  print("title : ${message?.data}");
+}
+
+//สร้าง class สำหรับ push notification
+class FirebaseApi {
+  //รับ instance ของ Fire base messaging เอาใว้สำหรับทำงานต่่อ
+  final _firebaseMessaging = FirebaseMessaging.instance;
+
+  //ส่วนการทำงานของ LOCAL NOTIFICATION ******************************************
+
+  //สร้าง Local Notification Plugin สำหรับใช้ในการ ประกาศ
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+  //ส่วนการทำงานของ LOCALLOCAL NOTIFICATION ******************************************
+
+  //สร้าง function สำหรับรับข้อมูลที่เกิดจาก event ตอนกดดู notification
+  void handleMessage(RemoteMessage? message) {
+    if (message == null) return;
+    print("title background : ${message.notification?.title}");
+    print("body background : ${message.notification?.body}");
+    print("data background : ${message?.data}");
+  }
+
+  //สร้าง function สำหรับ initNotification ต้องเป็น function แบบ Future async await
+  Future<void> initNotification() async {
+    //ขอ permision ส่วนของ Android and IOS
+    await _firebaseMessaging.requestPermission();
+    //ดึง Token ของ device mobile เอาใว้เป็น ID สำหรับการแจ้งเตือนมายังเครื่อง Device นี้
+    final fCMToken = await _firebaseMessaging.getToken();
+    print(fCMToken);
+    //ทำการ เริ่มต้น init location notification เอาใว้ให้พร้อมสำหรับการใช้งาน
+    await initLocalNotification(); //init local notification
+    //ทำการ เริ่มต้น init push notification ให้พร้อมสำหรับการใช้งาน
+    initPushNotification();
+  }
+
+  //Create function initPushNotification
+  Future initPushNotification() async {
+    //ส่วนนี้เป็นการกำหนด settting ในส่วนของ IOS จำเป็นมากบังคับระบุด้วย
+    await FirebaseMessaging.instance
+        .setForegroundNotificationPresentationOptions(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+
+    //ส่วนนี้คือ Event ที่เกิดจากการกดดู notification ในสถานะแอพยุติลงแล้ว หรือไม่ได้เปิดมช้งานแอพ
+    FirebaseMessaging.instance.getInitialMessage().then(handleMessage);
+    //ส่วนนี้คือ Event ที่เกิดจากการกดดู notification ในสถานะแอพอยู่เบื้องหลัง หรือ background
+    FirebaseMessaging.onMessageOpenedApp.listen(handleMessage);
+    //ส่วนนี้คือ Event เมื่อมีการแจ้งเตือนในส่วนของ background มาจะเข้า Event นี้
+    FirebaseMessaging.onBackgroundMessage(handleBackgroundMessage);
+    //ส่วนนี้คือ Event เมื่อมีการแจ้งเตือนในส่วนของส่วนหน้าหรือ font ground หรือ แอพเปิดใช้งานอยู่จะเข้า Event นี้
+    FirebaseMessaging.onMessage.listen((RemoteMessage? message) {
+      //จำเป็นต้อง if message = null
+      if (message == null) return;
+      //เมื่อเข้า Event function นี้ให้เรียกใช้ในส่วนของ show local notification
+      showNotification(message);
+      print("title : ${message.notification?.title}");
+      print("body : ${message.notification?.body}");
+      print("data : ${message?.data}");
+    });
+  }
+
+  //ส่วนการทำงานของ LOCAL NOTIFICATION ******************************************
+  //สร้าง function init notification  สำหรับเอาใว้แจ้งเตือนแบบส่วนหน้า หรือ ใยขณะที่แอพทำงานอยู่
+  Future<void> initLocalNotification() async {
+    //สร้าง setting Initialized for Android
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings(
+            "@mipmap/ic_launcher"); //เอาไฟล์มาจาก D:\flutter\basic\basic\android\app\src\main\res\mipmap-hdpi\ic_launcher.png
+
+    //สร้าง setting Initialized for IOS
+    const DarwinInitializationSettings darwinInitializationSettings =
+        DarwinInitializationSettings(
+      requestAlertPermission: true, //ขอ permision ส่วนของการ alert
+      requestBadgePermission:
+          true, //ขอ permision ส่วนของการ แสดงจำนวนตัวเลขแจ้งเตือนที่ icon application
+      requestSoundPermission:
+          true, //ขอ permision ส่วนของการ ใช้เสียง notification
+    );
+
+    //สร้าง Initialized setting สำหรับทุก แพทฟอร์ม และนำค่า Initialized ของ Android และ IOS มา setting
+    final InitializationSettings initializationSettings =
+        InitializationSettings(
+      android: initializationSettingsAndroid, // Initialized setting Android
+      iOS: darwinInitializationSettings, // Initialized setting IOS
+    );
+
+    //นำค่า initializationSettings ที่รวมทุก แพทฟอร์ม มา initialize ไห้กับ flutterLocalNotificationsPlugin
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        //onDidReceiveNotificationResponse คือ Event ที่เกดจากการกดดู notification ในส่วนหน้า หรืออยู๋ในสถานะแอพกำลังทำงานอยู่
+        onDidReceiveNotificationResponse: (NotificationResponse response) {
+      //ทำการ Decode response payload จาก string ที่ถูก Encode มา Decode มาเป็น ข้อมูล Type RemoteMessage
+      final message =
+          RemoteMessage.fromMap(jsonDecode(response.payload as String));
+      //ส่งข้อมูลไปยัง function handleMessage
+      handleMessage(message);
+    });
+  }
+
+  //สร้าง function สำหรับ show notification ที่เอาใว้ใช้สำหรับการแจ้งเตือนในจณะที่แอพเปิดใช้งาน
+  Future showNotification(RemoteMessage message) async {
+    // สร้าง detail และ channel สำหรับ Android
+    const AndroidNotificationDetails androidNotificationDetails =
+        AndroidNotificationDetails(
+            'nexflow_noti_001', //กำหนด channel id
+            'แจ้งเตือนทั่วไป', //กำหนด channel name
+            importance: Importance.max, //ระบุลำดับความสำคัญ
+            ticker:
+                "ticker" //ระบุ ticker เพื่อไห้ notification support Android รุ่นเก่าๆ
+            );
+
+    // สร้าง detail detail และ channel สำหรับ IOS ไม่จำเป็นต้องสร้างก็ได้ถ้าไม่ต้องการมีลูกเล่นอะไร
+    const DarwinNotificationDetails darwinNotificationDetails =
+        DarwinNotificationDetails(
+      badgeNumber: 3, //จำนวนตัวเลขแจ้งเตือนที่ icon application
+      subtitle: "แจ้งเตือนทั่วไป", //หัวข้อ subtitle
+    );
+
+    // set Notification detail ของแต่ละ แพทฟอร์ม มา setup
+    const NotificationDetails notificationDetails = NotificationDetails(
+        android: androidNotificationDetails, //setup setting for android
+        iOS: darwinNotificationDetails //setup setting for IOS
+        );
+
+    await flutterLocalNotificationsPlugin.show(
+      0, // id
+      message.notification?.title, // title
+      message.notification?.body, // body or subtitle
+      notificationDetails, // nodefication channel
+      //Encode ข้อมูลใน payload เป็น string เพื่อไปใช้ใน function  FirebaseMessaging.onMessage.listen จำเป็นต้อง Encode เป็น String บังคับนะจุฟๆ
+      payload: jsonEncode(message.toMap()),
+    );
+  }
+
+  //ส่วนการทำงานของ LOCAL NOTIFICATION ******************************************
+}
+
+//Enabled cound messaging api key https://www.youtube.com/watch?v=iOJGtKmk6tk
+/*
+url : https://fcm.googleapis.com/fcm/send
+Authorization : key=AAAAKQb1tLM:APA91bEaYKqWyigWsv2qmYQBZ35nUtCHaQQnd_J58uyGFjeRl-40Inc9LY7CyoJ2wJNysEuctL9ctGuozHgJ9Hl_0Zv-zpdTAd1qVbzj4VaIiueAmHJXUclfJHFIdt0vUZH0vIvqe3gj
+body : {
+    "to" : "eQI2E7ztQHe0jSnYI48odj:APA91bEUZC__idH5qgRdXMaqtkFj6vCo1j3iQxp8N-zfv7iDk31JowSOAvdHy-ZreMtL_90TnrV6RnOzY1e4oF9gmKQ7mLLEyvuSuB159T4AYAYkwP_pI9Lsh1CLNOsAr6IzUoCwdgmQ",
+    "notification" : {
+      "body" : "test",
+      "title" : "test notification"
+    }
+}
+*/

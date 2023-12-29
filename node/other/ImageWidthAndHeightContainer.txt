@@ -1,0 +1,118 @@
+
+
+//เทคนิคคือ การเอา Container มาครอบ Image และขยาย width and height ของ Container ไห้เต็ม Expanded เพื่อไห้รูปขยายเต็ม Container แค่ถ้า รูปเล็กต้อง ขยาย width and height ของ Image ให้เต็ม Container ด้วย 
+
+
+
+class MyStack extends StatelessWidget {
+  const MyStack({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(title: Text("my Stack")),
+        body: Column(
+          children: [
+            Expanded(
+                flex: 1,
+                child: Container(
+                  color: Colors.green,
+                  child: Row(children: [
+                    Expanded(
+                        child: OverflowBox(
+                      child: Container(
+                        width: double.infinity,
+                        height: double.infinity,
+                        color: Colors.amber,
+                        child: Image(
+                          image: NetworkImage(
+                              "https://images.unsplash.com/photo-1679678691010-985ab6b8ff62?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1169&q=80"),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    )),
+                  ]),
+                )),
+            Expanded(
+                flex: 2,
+                child: Container(
+                  color: Colors.red,
+                )),
+          ],
+        ));
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class MyStack extends StatelessWidget {
+  const MyStack({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(title: Text("my Stack")),
+        body: Column(
+          children: [
+            Expanded(
+              child: Row(children: [
+                Expanded(
+                    child: Container(
+                  width: double.infinity,
+                  height: double.infinity,
+                  child: Image(
+                    image: NetworkImage(
+                        "https://images.unsplash.com/photo-1679678691010-985ab6b8ff62?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1169&q=80"),
+                    fit: BoxFit.cover,
+                  ),
+                ))
+              ]),
+            ),
+            Expanded(
+              child: Row(children: [
+                Expanded(
+                    child: Container(
+                  width: double.infinity,
+                  height: double.infinity,
+                  child: Image(
+                    image: NetworkImage(
+                        "https://images.unsplash.com/photo-1680430108970-af82545154a0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"),
+                    fit: BoxFit.cover,
+                  ),
+                ))
+              ]),
+            ),
+            Expanded(
+              child: Row(children: [
+                Expanded(
+                    child: Container(
+                  width: double.infinity,
+                  height: double.infinity,
+                  child: Image(
+                    image: NetworkImage(
+                        "https://images.unsplash.com/photo-1680519599727-a23f5793ff57?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"),
+                    fit: BoxFit.cover,
+                  ),
+                ))
+              ]),
+            ),
+          ],
+        ));
+  }
+}

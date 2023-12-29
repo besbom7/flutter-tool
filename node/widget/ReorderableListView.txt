@@ -1,0 +1,49 @@
+
+
+class _MyReorderableListState extends State<MyReorderableList> {
+  var listData = [
+    ExcempleData("title1", "subTitle1", "1", Colors.red),
+    ExcempleData("title2", "subTitle2", "2", Colors.green),
+    ExcempleData("title3", "subTitle3", "3", Colors.yellow),
+    ExcempleData("title4", "subTitle4", "4", Colors.blue),
+    ExcempleData("title5", "subTitle5", "5", Colors.redAccent),
+    ExcempleData("title6", "subTitle6", "6", Colors.orange)
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(title: Text("My ReorderableList")),
+        body: ReorderableListView(
+          onReorder: (int oldIndex, int newIndex) {
+            if (newIndex > oldIndex) {
+              newIndex = newIndex - 1;
+            }
+            ExcempleData dataRemove = listData.removeAt(oldIndex);
+            setState(() {
+              listData.insert(newIndex, dataRemove);
+            });
+          },
+          children: [
+            for (final d in listData)
+              Card(
+                color: d.color,
+                key: ValueKey(d.id),
+                child: ListTile(
+                  leading: CircleAvatar(
+                    radius: 20,
+                    backgroundColor: Colors.white,
+                    child: Text(
+                      "${d.id}",
+                      style: TextStyle(
+                          color: d.color, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  title: Text("${d.title}"),
+                  subtitle: Text("${d.subTitle}"),
+                ),
+              )
+          ],
+        ));
+  }
+}

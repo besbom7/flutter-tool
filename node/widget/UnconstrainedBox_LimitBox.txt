@@ -1,0 +1,51 @@
+//UnconstrainedBox ใช้เพื่อให้สามารถกำหนด size ของลูกตามขนาดที่ต้องการ และ LimitBox ใช้คู่กับ  UnconstraniedBox เพื่อใช้จำกัดขนาดสูงสุดของ child
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+        title: "materiaApp Roune",
+        home: Scaffold(
+            body: UnconstrainedBox(
+          child: LimitedBox(
+            maxWidth: 300,
+            child: Container(
+              width: 2000,
+              height: 200,
+              color: Colors.red,
+            ),
+          ),
+        )));
+  }
+}
+
+
+
+Exemple 2 ตัวอย่างนี้จะเห็นได้ชัดถ้าไม่ใช้ UnconstrainedBox ขนาดที่ถูก set width 5000 จะยาวได้มากสุดแค่ขนาของ parent แต่ถ้าใช้ UnconstrainedBox จะได้ตามขนาดที่ต้องการ
+
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+        title: "materiaApp Roune",
+        home: Scaffold(
+            body: Center(
+          child: Container(
+              width: 200,
+              height: 200,
+              color: Colors.green,
+              child: UnconstrainedBox(
+                child: Container(
+                  color: Colors.blue,
+                  height: 50,
+                  width: 5000,
+                ),
+              )),
+        )));
+  }
+}

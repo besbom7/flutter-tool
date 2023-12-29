@@ -1,0 +1,35 @@
+//01. install flutter pub add fluttertoast
+/*
+01.
+dependencies:
+  fluttertoast: ^8.2.1
+*/
+
+
+//02. import 'package:fluttertoast/fluttertoast.dart';
+
+
+class MyToast extends StatelessWidget {
+  const MyToast({super.key});
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: ElevatedButton(
+            onPressed: () {
+              Fluttertoast.showToast(
+                  msg: "This is Toast", //message
+                  toastLength: Toast.LENGTH_SHORT, //length short
+                  gravity: ToastGravity.BOTTOM, //position text
+                  timeInSecForIosWeb: 1, //Time out
+                  backgroundColor: Colors.red.withOpacity(0.5),
+                  textColor: Colors.black,
+                  fontSize: 16.0);
+            },
+            child: Text("Show Toast")),
+      ),
+    );
+  }
+}

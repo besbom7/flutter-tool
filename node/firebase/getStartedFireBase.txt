@@ -1,0 +1,247 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+/*
+01.Login fire base 
+02.go to console in fire base
+03.create project fire base
+04.register application android and ios or web
+  4.1 how to register application ( IOS ) by 2 step
+  4.1.1 การหา app name หรือ id เข้าไปที่ D:\PROGRAMMING\Learn Flutter\test\ios\Runner.xcodeproj\project.pbxproj และ search หาคำว่า com.example.test
+  4.1.2 โหลด file GoogleService-info.plist จาก firebase ตอนที่ register จะมีให้โหลด file เมื่อโหลดแล้วให่นำไฟล์ไปวางใว้ที่  D:\PROGRAMMING\Learn Flutter\test\ios\Runner
+
+  4.2 how to register application ( Android ) สามารถดูได้จากการ Register ใน firebase ได้เลยไม่ยากอิอิ
+
+05.create FireStore Database and create Realtime Database in firebase
+06.add pubspec ( firebase_core , cloud_firestore )
+*/
+
+
+void main() async {
+  //07. initial Firebase ดูมาจาก web (https://firebase.flutter.dev/docs/overview/)
+  WidgetsFlutterBinding.ensureInitialized(); //initial Firebase
+  await Firebase.initializeApp(); //initial Firebase
+
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: "test",
+      home: MyFireBase(),
+    );
+  }
+}
+
+class MyFireBase extends StatefulWidget {
+  const MyFireBase({super.key});
+
+  @override
+  State<MyFireBase> createState() => _MyFireBaseState();
+}
+
+class _MyFireBaseState extends State<MyFireBase> {
+  //08.create Collection คล้ายกับการสร้าง Table แต่สามารถเพิ่มหรือลด field ได้มีความยืดยุ่นสูง
+  final CollectionReference usersCollection = //create Collection
+      FirebaseFirestore.instance.collection('users'); //create Collection
+
+  //09.Add Data to fireStore firebase
+  Future<void> addUser() {
+    // Add a new document with a generated ID
+    return usersCollection //เพิ่มข้อมูล
+        .add({
+          'name': 'John Doe',
+          'email': 'johndoe@gmail.com',
+          'age': 30,
+        })
+        .then((value) => print("User Added"))
+        .catchError((error) => print("Failed to add user: $error"));
+  }
+
+  //10.getData fireStore in firebase
+  Future<void> getData() async {
+    try {
+      QuerySnapshot querySnapshot = await usersCollection.get(); //ดึงข้อมูล
+      print(querySnapshot.docs.length); //จำนวนข้อมูล
+      querySnapshot.docs.forEach((doc) {
+        //นำจำนวนข้อมูลที่ได้มาวน
+        print(doc.id);
+        print(doc.data());
+      });
+    } catch (e) {
+      print('Error retrieving data: $e');
+    }
+  }
+
+  //11.delete data fireStore in firebase โดยจะต้องส่ง ID เข้าไปเพิ่มลบข้อมูล
+  Future<void> deleteData(String documentId) async {
+    try {
+      await usersCollection.doc(documentId).delete(); //ลบข้อมูล
+      print('Document $documentId successfully deleted');
+    } catch (e) {
+      print('Error deleting document: $e');
+    }
+  }
+
+  //12.edit data fireStore in firebase โดยจะต้องส่ง ID และ ข้อมูลไหม่เข้าไป
+  Future<void> editData(String documentId, var newData) async {
+    try {
+      await usersCollection.doc(documentId).update(newData); //Edit data
+      print('Document $documentId successfully updated');
+    } catch (e) {
+      print('Error updating document: $e');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+          child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Expanded(
+              flex: 1,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  MaterialButton(
+                    child: Text("save"),
+                    color: Colors.green,
+                    onPressed: () {
+                      addUser(); //Save to firebase
+                    },
+                  ),
+                  MaterialButton(
+                    child: Text("get Data"),
+                    color: Colors.blue,
+                    onPressed: () {
+                      getData(); //get data from firebase
+                    },
+                  ),
+                  MaterialButton(
+                    child: Text("Delete"),
+                    color: Colors.red,
+                    onPressed: () {
+                      deleteData(
+                          "3mm28gOxiuc9OPcinTtV"); //delete data in firebase
+                    },
+                  ),
+                  MaterialButton(
+                    child: Text("Edit"),
+                    color: Colors.yellow,
+                    onPressed: () {
+                      var data = {
+                        'name': 'John Doe 2222',
+                        'email': 'johndoe@gmail.com',
+                        'age': 100,
+                      };
+                      editData(
+                          "Qvjz2GLAf4GTMcDKy92p", data); //edit data in firebase
+                    },
+                  ),
+                ],
+              )),
+          //ด้านล่างนี้คือ exemple การใช้งาน StreamBuilder เพื่อรับข้อมูลแบบ RealTime
+          Expanded(
+            flex: 3,
+            child: StreamBuilder(
+              //เรียกใช้ StreamBuilder
+              stream: FirebaseFirestore.instance
+                  .collection("users")
+                  .snapshots(), // กำหนด Collection snapshot
+              builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                // builder Widget and get data in snapshot
+                if (!snapshot.hasData) {
+                  //check data ว่างหรือโหลด data อยู่
+                  return Center(
+                      child: CircularProgressIndicator()); //show loading dialog
+                }
+
+                //return กรณีมี data มา
+                return ListView(
+                    children: snapshot.data!.docs.map((document) {
+                  //นำข้อมูลที่ได้มา map และ .toList คล้าย map ใน javascript แต่ต้อง .toList
+                  return ListTile(
+                    leading: Text(document.id), //id ของ data
+                    title: Text("${document['name']}"), //data field name
+                    subtitle: Text("${document['email']}"), //data field email
+                  );
+                }).toList());
+              },
+            ),
+          )
+        ],
+      )),
+    );
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// StreamBuilder(
+//               stream:
+//                   FirebaseFirestore.instance.collection("users").snapshots(),
+//               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+//                 if (!snapshot.hasData) {
+//                   return Center(
+//                     child: CircularProgressIndicator(),
+//                   );
+//                 }
+//                 return Container(
+//                   child: ListView(
+//                     children: snapshot.data!.docs.map((document) {
+//                       return Container(
+//                         child: ListTile(
+//                             leading: Container(
+//                               alignment: Alignment.center,
+//                               width: 40,
+//                               height: 40,
+//                               child: Text("${document['age']}"),
+//                               decoration: BoxDecoration(
+//                                   color: Colors.green[100],
+//                                   borderRadius:
+//                                       BorderRadius.all(Radius.circular(10))),
+//                             ),
+//                             trailing: Container(
+//                                 child: GestureDetector(
+//                               child: Icon(
+//                                 Icons.delete,
+//                                 color: Colors.red,
+//                               ),
+//                               onTap: () {
+//                                 deleteData(document.id);
+//                               },
+//                             )),
+//                             title: Text("${document['name']}"),
+//                             subtitle: Text("${document['email']}")),
+//                       );
+//                     }).toList(),
+//                   ),
+//                 );
+//               },
+//             )

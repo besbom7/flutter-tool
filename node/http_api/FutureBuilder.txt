@@ -1,0 +1,65 @@
+//ต้องลง ส่วนเสริม http ก่อนที่ pub.dev
+
+class MyFutureBuilder extends StatefulWidget {
+  const MyFutureBuilder({super.key});
+
+  @override
+  State<MyFutureBuilder> createState() => _MyFutureBuilderState();
+}
+
+class _MyFutureBuilderState extends State<MyFutureBuilder> {
+  Future<List<String>> getData() async {
+    //ถ้าเป้น async ต้องระบุ function เป็น Future
+    List<String> list = [];
+    var response = await http.get(Uri.parse(
+        'https://jsonplaceholder.typicode.com/todos')); // fetch Data จาก API
+    var result = json.decode(response.body); // convert data to json
+
+    for (var d in result) {
+      list.add("id : ${d["id"]} title : ${d["title"]}");
+    }
+    return list;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("My FutureBuilder"),
+      ),
+      body: FutureBuilder(
+          // ใช้การ Render Widget จากการรอข้อมูลจาก api
+          future:
+              getData(), // function ที่จะไห้ทำการรอข้อมูล (return async await)
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if (snapshot.hasData) {
+              //เช็ตว่าโหลดข้อมูลเสร็จแล้วหรือยัง
+              var list = snapshot.data;
+              return ListView.builder( 
+                  itemCount: list.length,
+                  itemBuilder: (context, index) {
+                    var data = list[index];
+                    return Padding(
+                      padding: const EdgeInsets.all(7.0),
+                      child: Card(
+                        child: ListTile(
+                          title: Text("${data}"),
+                        ),
+                      ),
+                    );
+                  });
+            } else if (snapshot.hasError) {
+              //เช็ตว่าโหลดข้อมูลเสร็จแล้วหรือยัง และมี Error ชิมิ
+              return Center(
+                child: Text("${snapshot.error}"),
+              );
+            } else {
+              //โหลด data ยังไม่เสร็จ
+              return Center(
+                child: Text("loading"),
+              );
+            }
+          }),
+    );
+  }
+}

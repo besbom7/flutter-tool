@@ -1,0 +1,29 @@
+class MyDrawer extends StatelessWidget {
+  const MyDrawer({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("My Drawer")),
+      drawer: Drawer( //การแสดง popup ด้านซ้าย
+          backgroundColor: Colors.white,
+          child: Container(
+            color: Colors.white,
+            child: ListView(
+              children: [
+                DrawerHeader(child: Text("HeaderDrawer")), //ส่วนหัวของ Drawer in popup
+                Text("Menu1"),
+                SizedBox(
+                  height: 30,
+                ),
+                Text("Menu2"),
+                SizedBox(
+                  height: 30,
+                ),
+                Text("Menu3"),
+              ],
+            ),
+          )),
+    );
+  }
+}

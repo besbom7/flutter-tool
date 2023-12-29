@@ -1,0 +1,17 @@
+
+
+ขั้นตอนการทำ แบบเบื้องต้น
+
+01. เพิ่ม pub dev interminal ( flutter pub add flutter_native_splash )
+02. เพิ่มสคลิปการทำงานด้านล่างใน pubspec.yaml 
+
+    flutter_native_splash:
+        image: "assert/images/image.png" #รูปสำหรับทำ splash screen
+        color: "#b5e28f" #สีพื้นหลังสำหรับทำ splash sreen
+        image_dark: "assert/images/cupertino_activity_indicator.gif" #splash สำหรับ dark mode
+        color_dark: "#000000"  #splash สำหรับ dark mode
+
+
+03. เมื่อ settings ทุกอย่างเสร็จแล้วให้ run คำสั่งนี้ใน terminal ( flutter pub run flutter_native_splash:create ) เพื่อให้โปรแกรม
+    ทำการ getnerate file splash สำหรับ Android and ios ทุกๆครั้งที่มีการเปลี่ยนหรือแก้ไข splash ใน pubspec.yaml ต้องรันคำสั้งนี้ไหม่ทุกครั้ง เพื่อให้โปรแกรม
+    โปรแกรม getnerate ไหม่

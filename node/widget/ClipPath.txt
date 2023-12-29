@@ -1,0 +1,135 @@
+
+//url excemple : https://www.developerlibs.com/2019/08/flutter-draw-custom-shaps-clip-path.html
+
+
+class MyClipPath extends StatelessWidget {
+  const MyClipPath({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: ClipPath(
+      clipper: CustomClipPath3(),
+      child: Container(
+        width: double.infinity,
+        height: 200,
+        color: Colors.green,
+      ),
+    ));
+  }
+}
+
+class CustomClipPath extends CustomClipper<Path> {
+  //custom แบบ โค้งเข้า basic
+  @override
+  getClip(Size size) {
+    Path path = Path(); // Create Path
+    path.moveTo(0, 0); //start point y = 0 x = 0
+
+    path.lineTo(0, size.height); //goto x = 0 , y = max
+
+    path.quadraticBezierTo(
+        size.width / 2, size.height / 2, size.width, size.height);
+
+    path.lineTo(size.width, size.height); //goto x = max , y = max
+
+    path.lineTo(size.width, 0); //goto x = max , y = 0
+
+    path.close(); //close path point
+    return path;
+  }
+
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
+    // TODO: implement shouldReclip
+    return false;
+  }
+}
+
+class CustomClipPath2 extends CustomClipper<Path> {
+  //custom แบบ โค้งออก basic
+  @override
+  getClip(Size size) {
+    Path path = Path();
+    path.lineTo(0, size.height - 100);
+    path.quadraticBezierTo(
+        size.width / 2, size.height, size.width, size.height - 100);
+    path.lineTo(size.width, 0);
+    path.close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
+    // TODO: implement shouldReclip
+    return false;
+  }
+}
+
+class CustomClipPath3 extends CustomClipper<Path> {
+  //custom แบบ โค้ง basic
+  @override
+  getClip(Size size) {
+    Path path = Path();
+    path.lineTo(0, size.height);
+    path.quadraticBezierTo(
+        size.width / 4, size.height - 40, size.width / 2, size.height - 20);
+    path.quadraticBezierTo(
+        3 / 4 * size.width, size.height, size.width, size.height - 30);
+    path.lineTo(size.width, 0);
+    return path;
+  }
+
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
+    // TODO: implement shouldReclip
+    return false;
+  }
+}
+
+
+
+//web generater ClipPath สามารถวาดได้เลย
+//ตัวอย่าง code ที่ได้ให้ copy ไปใช้แต่บางส่วนใชเฉพาะในส่วน <start-copy> - <end-copy>
+
+//web generater : https://fluttershapemaker.com/#/
+
+//web excemple : https://www.youtube.com/watch?time_continue=107&v=xuatM4pZkNk&embeds_referring_euri=https%3A%2F%2Fwww.google.com%2Fsearch%3Fq%3DClipPath%2Bflutter%26sxsrf%3DAPwXEdcrCMU05EdNT0qHlNqSzlPmOJzjuA%253A1685725041321%26ei%3DcR96ZMWlE9Kl-QaPxrz&source_ve_path=MTM5MTE3LDI4NjY2&feature=emb_logo
+class RPSCustomPainter extends CustomPainter{
+  
+  @override
+  void paint(Canvas canvas, Size size) {
+    
+    //<start-copy>
+
+    Paint paint0 = Paint()
+      ..color = const Color.fromARGB(255, 33, 150, 243)
+      ..style = PaintingStyle.fill
+      ..strokeWidth = 1;
+     
+         
+    Path path0 = Path();
+    path0.moveTo(0,0);
+    path0.lineTo(0,size.height*0.4166667);
+    path0.quadraticBezierTo(size.width*0.1406250,size.height*0.3137500,size.width*0.2400000,size.height*0.3266667);
+    path0.cubicTo(size.width*0.3106250,size.height*0.3154167,size.width*0.3675000,size.height*0.3704167,size.width*0.7000000,size.height*0.4166667);
+    path0.quadraticBezierTo(size.width*0.8756250,size.height*0.4279167,size.width,size.height*0.2733333);
+    path0.lineTo(size.width*0.9975000,0);
+
+    //<end-copy>
+
+    canvas.drawPath(path0, paint0);
+  
+    
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return true;
+  }
+  
+}
+
+
+
+

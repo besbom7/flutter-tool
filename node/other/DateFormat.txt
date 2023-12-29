@@ -1,0 +1,68 @@
+
+
+// install | flutter pub add intl
+//import 'package:intl/date_symbol_data_local.dart';
+//import 'package:intl/intl.dart';
+
+
+
+
+//# สามารถ set default lang ได้ที่ main
+void main() async {
+  Intl.defaultLocale = "th";
+  initializeDateFormatting();
+
+  runApp(MyApp());
+}
+
+
+
+
+
+//# รูปแบบการใช้งาน
+class MyDateFormat extends StatefulWidget {
+  const MyDateFormat({super.key});
+
+  @override
+  State<MyDateFormat> createState() => _MyDateFormatState();
+}
+
+class _MyDateFormatState extends State<MyDateFormat> {
+  var date = DateTime.now();
+  var formatDate = new DateFormat.yMEd('en');
+  var formatDate1 = new DateFormat.yMMMMEEEEd('th');
+  var formatDate2 =
+      new DateFormat("dd/MMM/yyyy  และ วันที่ dd เดือน MMMM ปี yyyy", 'th');
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Date formar")),
+      body: Column(children: [
+        Expanded(
+            child: Container(
+          color: Color.fromARGB(255, 178, 148, 146),
+          child: Center(
+              child: Text(
+            "${formatDate.format(date)}",
+            style: TextStyle(color: Colors.white, fontSize: 25),
+          )),
+        )),
+        Expanded(
+            child: Container(
+          color: Color.fromARGB(255, 203, 196, 196),
+          child: Center(
+              child: Text("${formatDate1.format(date)}",
+                  style: TextStyle(color: Colors.white, fontSize: 25))),
+        )),
+        Expanded(
+            child: Container(
+          color: Color.fromARGB(255, 178, 148, 146),
+          child: Center(
+              child: Text("${formatDate2.format(date)}",
+                  style: TextStyle(color: Colors.white, fontSize: 25))),
+        )),
+      ]),
+    );
+  }
+}

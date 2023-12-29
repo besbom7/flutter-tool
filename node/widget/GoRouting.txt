@@ -1,0 +1,351 @@
+import 'dart:math';
+
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+//01.install pub dev | (flutter pub add go_router)
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    //creat routing in MaterialApp (MaterialApp.router)
+    return MaterialApp.router(
+      title: "materiaApp Roune",
+      routerConfig: AppRoute().router, //Set config routing from class AppRoute
+    );
+  }
+}
+
+//Create class AppRoute for config routing ...
+class AppRoute {
+  //create Gorouter
+  GoRouter router = GoRouter(
+    //create routes array for setting routing
+    routes: [
+      GoRoute(
+        //create name routing กำหนดชื่อ route
+        name: "home",
+        //create path routing กำหนด path route "/" จะเป็น path เริ่มต้นที่หน้าแรก
+        path: "/",
+        //create builder routing สร้าง build สำหรับ routing
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return const MaterialPage(child: HomePage());
+        },
+      ),
+      GoRoute(
+        name: "login",
+        path: "/login",
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return const MaterialPage(child: LoginPage());
+        },
+      ),
+      GoRoute(
+        //รูป route แบบกำหนดการรับข้อมูลแบบ path param สามาส่งข้อมูลมาทาง routing ได้ (ส่งได้เฉพาะ string)
+        name: "menu1",
+        path: "/menu1/:name",
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return MaterialPage(
+              child: MenuPage1(data: state.pathParameters["name"]));
+        },
+      ),
+      GoRoute(
+        //รูป route แบบกำหนดการรับข้อมูลแบบ extra สามาส่งข้อมูลมาทาง routing ได้ (ส่งได้ทุกอย่าง)
+        name: "menu2",
+        path: "/menu2",
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return MaterialPage(child: MenuPage2(data: state.extra));
+        },
+      ),
+      GoRoute(
+        name: "menu3",
+        path: "/menu3",
+        //รูป route แบบกำหนดการรับข้อมูลแบบ query param สามาส่งข้อมูลมาทาง routing ได้ (ส่งได้เฉพาะ string)
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return MaterialPage(child: MenuPage3(data: state.queryParameters));
+        },
+      ),
+      GoRoute(
+        //รูป route แบบกำหนดการรับข้อมูลแบบ query param และ path param ใช้ร่วมกัน สามาส่งข้อมูลมาทาง routing ได้ (ส่งได้เฉพาะ string)
+        name: "menu4",
+        path: "/menu4/:id",
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return MaterialPage(
+              child: MenuPage4(
+                  id: state.pathParameters["id"], data: state.queryParameters));
+        },
+      ),
+      GoRoute(
+          //รูป route แบบ sub child สามารถสร้างลูกใน route ได้ (exemple path /menu5/menu5_1)
+          name: "menu5",
+          path: "/menu5",
+          pageBuilder: (BuildContext context, GoRouterState state) {
+            return MaterialPage(child: MenuPage5());
+          },
+          routes: [
+            //sub child route 5.1
+            GoRoute(
+              path: "menu5_1",
+              name: "menu5_1",
+              pageBuilder: (BuildContext context, GoRouterState state) {
+                return MaterialPage(child: MenuPage5_1());
+              },
+            ),
+            GoRoute(
+              //sub child route 5.2
+              path: "menu5_2",
+              name: "menu5_2",
+              pageBuilder: (BuildContext context, GoRouterState state) {
+                return MaterialPage(child: MenuPage5_2());
+              },
+            )
+          ])
+    ],
+    //redirect การบังคับให้ไปยังเส้นทางที่ระบุตามที่ต้องการ ถ้า return null จะไม่ย้ายเส้นทาง
+    redirect: (context, state) async {
+      bool AutnLogin = true;
+      if (!AutnLogin) {
+        //บังคับเส้นทางไปยังหน้า login
+        return "/login";
+      }
+      return null;
+    },
+    //จัดการเมื่อระบุเส้นทางผิดจะมาเข้าท่ี่หน้านี้
+    errorPageBuilder: (context, state) {
+      return MaterialPage(
+          child: Scaffold(
+        body: Center(child: Text("Error 404")),
+      ));
+    },
+  );
+}
+
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Home page")),
+      body: Center(
+          child: Column(
+        children: [
+          MaterialButton(
+            onPressed: () {
+              //รูปแบบการนำทางเส้นทางต่างๆสามารถใช้ได้หลาายรูปแบบตามความเหมาะสม
+
+              // context.push("/login"); //push by location การนำทางแบบซ้อน stack
+              // context.pushNamed("login"); //push by name การนำทางแบบซ้อน stack
+
+              // context.go("/login"); //go by location การนำทางแบบไม่ซ้อน stack เริ่มหน้าใหม่ stack = 0
+              // context.goNamed("name") //go by name การนำทางแบบไม่ซ้อน stack เริ่มหน้าใหม่ stack = 0
+
+              // context.replace("location") replace by location การนำทางแบบไม่ซ้อน stack เริ่มหน้าใหม่ stack = 0
+              // context.replaceNamed("name") replace by name การนำทางแบบไม่ซ้อน stack เริ่มหน้าใหม่ stack = 0
+
+              //การส่งข้อมูลผ่าน route แบบ path param
+              context.pushNamed("menu1", pathParameters: {
+                "name": "Parameters by path (BEST)"
+              }); //การนำทางแบบซ้อน stack
+            },
+            child: Text("GO MENU 1 (send data in path)"),
+            color: Colors.green[200],
+          ),
+          MaterialButton(
+            onPressed: () {
+              //การส่งข้อมูลผ่าน route แบบ path extra ส่งได้ทุกอย่าง
+              context.pushNamed("menu2", extra: {
+                "bool": false,
+                "list": ["1", "2", "3", "4"],
+                "object": {"name": "Best"}
+              });
+            },
+            child: Text("GO MENU 2 (send data by extra params)"),
+            color: Colors.deepOrange[200],
+          ),
+          MaterialButton(
+            onPressed: () {
+              //การส่งข้อมูลผ่าน route แบบ query param ส่งได้เฉพาะ string
+              context.pushNamed("menu3",
+                  queryParameters: {"name": "DEV BEST 555"});
+            },
+            child: Text("GO MENU 3 (send data by query params)"),
+            color: Colors.blue[200],
+          ),
+          MaterialButton(
+            onPressed: () {
+              //การส่งข้อมูลผ่าน route แบบ path param และ query param ใช้ร่มกัน ส่งได้เฉพาะ string
+              context.pushNamed("menu4",
+                  pathParameters: {"id": "Dev"},
+                  queryParameters: {"name": "Best"});
+            },
+            child:
+                Text("GO MENU 4 (send data by query params and path params)"),
+            color: Colors.red[200],
+          ),
+          MaterialButton(
+            onPressed: () {
+              //go to sub child
+              context.pushNamed("menu5");
+            },
+            child: Text("GO MENU 5 (sub child routing)"),
+            color: Colors.purple[200],
+          ),
+          MaterialButton(
+            onPressed: () {
+              context.push("/error404");
+            },
+            child: Text("GO TO PAGE FOUND 404"),
+            color: Colors.yellow[200],
+          )
+        ],
+      )),
+    );
+  }
+}
+
+class LoginPage extends StatelessWidget {
+  const LoginPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Login page")),
+      body: Center(
+          child: MaterialButton(
+        onPressed: () {
+          context.go("/");
+        },
+        child: Text("Go Home Page"),
+        color: Colors.red,
+      )),
+    );
+  }
+}
+
+class MenuPage1 extends StatelessWidget {
+  var data;
+
+  MenuPage1({this.data, super.key}) {
+    print(data);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Menu page 1")),
+      body: Center(child: Text("$data")),
+    );
+  }
+}
+
+class MenuPage2 extends StatelessWidget {
+  var data;
+
+  MenuPage2({this.data, super.key}) {
+    print(data);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Menu page 2")),
+      body: Center(child: Text("${data['object']['name']}")),
+    );
+  }
+}
+
+class MenuPage3 extends StatelessWidget {
+  var data;
+
+  MenuPage3({this.data, super.key}) {
+    print(data);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Menu page 3")),
+      body: Center(child: Text("${data}")),
+    );
+  }
+}
+
+class MenuPage4 extends StatelessWidget {
+  var data;
+  var id;
+
+  MenuPage4({this.data, this.id, super.key}) {
+    print(data);
+    print(id);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Menu page 4")),
+      body: Center(child: Text("${id} ${data['name']}")),
+    );
+  }
+}
+
+class MenuPage5 extends StatelessWidget {
+  MenuPage5({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Menu page 5")),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            MaterialButton(
+              onPressed: () {
+                context.push("/menu5/menu5_1");
+              },
+              child: Text("go sub menu 5_1"),
+              color: Colors.purple[100],
+            ),
+            MaterialButton(
+              onPressed: () {
+                context.push("/menu5/menu5_2");
+              },
+              child: Text("go sub menu 5_2"),
+              color: Colors.purple[100],
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class MenuPage5_1 extends StatelessWidget {
+  MenuPage5_1({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Menu page 5.1")),
+      body: Center(child: Text("Menu sub 5.1")),
+    );
+  }
+}
+
+class MenuPage5_2 extends StatelessWidget {
+  MenuPage5_2({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Menu page 5.2")),
+      body: Center(child: Text("Menu sub 5.2")),
+    );
+  }
+}

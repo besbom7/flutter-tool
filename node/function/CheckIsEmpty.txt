@@ -1,0 +1,17 @@
+   
+   
+   
+bool empty(var value){
+    if (["", null, false, 0].contains(value)) {
+      return true;
+    }
+    return false;
+}
+  
+  var test = null;
+  if(empty(test)){
+    print('Hello, World!1');
+  }else{
+    print('Hello, World!2');
+  }
+  

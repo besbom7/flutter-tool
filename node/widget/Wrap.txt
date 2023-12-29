@@ -1,0 +1,57 @@
+class MyWrap extends StatelessWidget {
+  const MyWrap({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Wrap")),
+      body: Container(
+        color: Colors.green,
+        child: Row(
+          children: [
+            Expanded(
+              child: Wrap(alignment: WrapAlignment.center, children: [
+                Container(
+                  color: Colors.red,
+                  width: 200,
+                  height: 200,
+                ),
+                Container(
+                  color: Colors.yellow,
+                  width: 200,
+                  height: 200,
+                ),
+                Container(
+                  color: Colors.blue,
+                  width: 200,
+                  height: 200,
+                )
+              ]),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
+
+class MyWrapTxT extends StatelessWidget {
+  const MyWrapTxT({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("wrap text")),
+      body: Row(children: [
+        Expanded(
+          child: Wrap(children: [
+            Text(
+                'TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT')
+          ]),
+        )
+      ]),
+    );
+  }
+}

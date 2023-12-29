@@ -1,0 +1,88 @@
+//ถ้าต้องการใช้ date picker ภาษาไทยต้อง ทำตามนี้
+//1. install pub get  intl: ^0.17.0 (dependencies)
+//2. install pub get  flutter_localization: ^0.1.10 (dependencies)
+//3. import 'package:flutter_localizations/flutter_localizations.dart';
+/*4. เพิ่ม localizationsDelegates ใน MaterialApp
+      ********************
+      localizationsDelegates: GlobalMaterialLocalizations.delegates,
+      supportedLocales: const [
+        Locale('th', ''),
+      ],
+      ********************
+
+      Exemple
+      ********************
+      class MyApp extends StatelessWidget {
+        const MyApp({super.key});
+
+        @override
+        Widget build(BuildContext context) {
+          return MaterialApp(
+            title: "test",
+            home: MyTimePicker(),
+            theme: ThemeData(primarySwatch: Colors.red),
+            localizationsDelegates: GlobalMaterialLocalizations.delegates,
+            supportedLocales: const [
+              Locale('th', ''),
+            ],
+          );
+        }
+      }
+      *********************
+*/
+
+class MyDatePicker extends StatefulWidget {
+  const MyDatePicker({super.key});
+
+  @override
+  State<MyDatePicker> createState() => _MyDatePickerState();
+}
+
+class _MyDatePickerState extends State<MyDatePicker> {
+  var _selectDate = DateTime.now(); //ตัวแปราำหรับเก็บค่า Date
+
+  void _showDatePicker() {
+    showDatePicker(
+            //สั่ง show DatePicker
+            context: context,
+            initialDate: _selectDate == null
+                ? DateTime.now()
+                : _selectDate, //ค่าเริ่มต้นของ DatePicker คล้ายกับ ngModel ใน Angular
+            firstDate: DateTime(2000), //set ปีต่ำสุดที่จะให้เลือก
+            lastDate: DateTime(2030)) //set ปีสูงสุดที่จะให้เลือก
+        .then((value) {
+      //then ค่าจากการเลือก DatePicker
+      setState(() {
+        if (value != null) {
+          _selectDate = value!;
+        }
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+          child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Text(
+            "$_selectDate",
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          MaterialButton(
+            color: Colors.orange,
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Text("Open Date"),
+            ),
+            onPressed: () {
+              _showDatePicker(); // Main
+            },
+          )
+        ],
+      )),
+    );
+  }
+}

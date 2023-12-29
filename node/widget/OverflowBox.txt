@@ -1,0 +1,46 @@
+//OverflowBox หน้ามันคือการจำกัดขนาดของส่วนเกินให้ยาวได้มากสุดของขนาของมันคือ OverflowBox !!
+
+class MyStack extends StatelessWidget {
+  const MyStack({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(title: Text("my Stack")),
+        body: Center(
+          child: Container(
+            color: Colors.red,
+            width: 100,
+            height: 100,
+            child: OverflowBox(
+              maxHeight: 300,
+              maxWidth: 300,
+              child: Container(
+                color: Colors.green.withOpacity(0.3),
+                width: double.infinity,
+                height: double.infinity,
+                child: Text("TEST"),
+              ),
+            ),
+          ),
+        ));
+  }
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+        title: "materiaApp Roune",
+        home: Scaffold(
+            body: OverflowBox(
+          minWidth: 0,
+          minHeight: 0,
+          maxWidth: 300,
+          maxHeight: double.infinity,
+          child: Container(color: Colors.red, width: 4000, height: 50),
+        )));
+  }
+}
